@@ -1,0 +1,37 @@
+services:
+  exiron:
+    image: ghcr.io/c2bw/exiron:latest
+    # Match the host owner of ./config so the non-root release can atomically
+    # replace config.yml through the dashboard. Set these to `id -u`/`id -g`
+    # on Linux when the host user is not 1000:1000.
+    user: "${HOST_UID:-1000}:${HOST_GID:-1000}"
+    ports:
+      - "${EXIRON_BIND_ADDRESS:-127.0.0.1}:${EXIRON_PORT:-4000}:4000"
+    environment:
+      PHX_SERVER: "true"
+      PHX_HOST: "${PHX_HOST:-localhost}"
+      PORT: "4000"
+      SECRET_KEY_BASE: "${SECRET_KEY_BASE:?Set SECRET_KEY_BASE with `mix phx.gen.secret` before running docker compose}"
+      EXIRON_DASHBOARD_PASSWORD: "${EXIRON_DASHBOARD_PASSWORD:?Set EXIRON_DASHBOARD_PASSWORD before running docker compose}"
+      EXIRON_GROUP_ALBUMS: "${EXIRON_GROUP_ALBUMS:-false}"
+      EXIRON_METRICS_TOKEN: "${EXIRON_METRICS_TOKEN:-}"
+      EXIRON_TRUSTED_PROXIES: "${EXIRON_TRUSTED_PROXIES:-}"
+      #EXIRON_ENABLED: "${EXIRON_ENABLED:-true}"
+      #EXIRON_CONFIG: "/app/config/config.yml"
+      #EXIRON_CLIENT_TIMEOUT_MS: "${EXIRON_CLIENT_TIMEOUT_MS:-5000}"
+      #EXIRON_PENDING_TIMEOUT_MS: "${EXIRON_PENDING_TIMEOUT_MS:-600000}"
+      #EXIRON_SEND_TIMEOUT_MS: "${EXIRON_SEND_TIMEOUT_MS:-30000}"
+      #EXIRON_MAX_PENDING: "${EXIRON_MAX_PENDING:-1000}"
+      #EXIRON_MAX_QUEUE_PER_HOOK: "${EXIRON_MAX_QUEUE_PER_HOOK:-100}"
+      #EXIRON_MAX_QUEUE_BYTES_PER_HOOK: "${EXIRON_MAX_QUEUE_BYTES_PER_HOOK:-52428800}"
+      #EXIRON_MAX_IN_FLIGHT_SENDS: "${EXIRON_MAX_IN_FLIGHT_SENDS:-100}"
+      #EXIRON_MAX_IN_FLIGHT_SENDS_PER_HOOK: "${EXIRON_MAX_IN_FLIGHT_SENDS_PER_HOOK:-10}"
+    volumes:
+      - ./config:/app/config
+    healthcheck:
+      test: ["CMD", "wget", "-q", "--spider", "http://127.0.0.1:4000/health/ready"]
+      interval: 30s
+      timeout: 3s
+      retries: 3
+      start_period: 30s
+    restart: unless-stopped

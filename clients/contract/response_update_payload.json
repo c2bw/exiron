@@ -1,0 +1,7 @@
+{
+  "req_id": "request-id",
+  "datatype": "text",
+  "data": "UGFydGlhbCByZXBseQ==",
+  "final": false,
+  "parse_mode": "plain"
+}

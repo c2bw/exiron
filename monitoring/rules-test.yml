@@ -1,0 +1,164 @@
+rule_files:
+  - rules.yml
+evaluation_interval: 1m
+tests:
+  - name: scrape outage waits for two minutes
+    interval: 1m
+    input_series:
+      - series: 'up{job="exiron",instance="test"}'
+        values: '0+0x5'
+    alert_rule_test:
+      - eval_time: 1m
+        alertname: ExironScrapeUnavailable
+        exp_alerts: []
+      - eval_time: 3m
+        alertname: ExironScrapeUnavailable
+        exp_alerts:
+          - exp_labels: {job: exiron, instance: test, severity: warning}
+            exp_annotations: {summary: Exiron metrics scrape is unavailable}
+  - name: configured pressure threshold and sustained duration
+    interval: 1m
+    input_series:
+      - series: 'exiron_pending_requests{job="exiron",instance="test"}'
+        values: '850+0x15'
+      - series: 'exiron_pending_limit{job="exiron",instance="test"}'
+        values: '1000+0x15'
+    alert_rule_test:
+      - eval_time: 9m
+        alertname: ExironPendingPressure
+        exp_alerts: []
+      - eval_time: 11m
+        alertname: ExironPendingPressure
+        exp_alerts:
+          - exp_labels: {job: exiron, instance: test, severity: warning}
+            exp_annotations: {summary: Exiron pending requests exceed 80% of the configured limit}
+  - name: high failure ratio does not alert on tiny sample counts
+    interval: 1m
+    input_series:
+      - series: 'exiron_send_duration_seconds_count{job="exiron",instance="test",kind="respond",outcome="error"}'
+        values: '0+1x20'
+    alert_rule_test:
+      - eval_time: 20m
+        alertname: ExironSendFailureRate
+        exp_alerts: []
+  - name: recovered failures above threshold remain operationally visible
+    interval: 1m
+    input_series:
+      - series: 'exiron_send_duration_seconds_count{job="exiron",instance="test",kind="respond",outcome="ok"}'
+        values: '0+900x20'
+      - series: 'exiron_send_duration_seconds_count{job="exiron",instance="test",kind="respond",outcome="error"}'
+        values: '0+100x20'
+    alert_rule_test:
+      - eval_time: 15m
+        alertname: ExironSendFailureRate
+        exp_alerts:
+          - exp_labels: {job: exiron, instance: test, severity: warning}
+            exp_annotations: {summary: "More than 5% of timed send attempts are failing; retries may recover them"}
+  - name: sustained latency beyond the provisional target fires with enough traffic
+    interval: 1m
+    input_series:
+      - series: 'exiron_response_duration_seconds_bucket{job="exiron",instance="test",le="0.5"}'
+        values: '0+0x12'
+      - series: 'exiron_response_duration_seconds_bucket{job="exiron",instance="test",le="1"}'
+        values: '0+0x12'
+      - series: 'exiron_response_duration_seconds_bucket{job="exiron",instance="test",le="2.5"}'
+        values: '0+6000x12'
+      - series: 'exiron_response_duration_seconds_bucket{job="exiron",instance="test",le="+Inf"}'
+        values: '0+6000x12'
+      - series: 'exiron_response_duration_seconds_count{job="exiron",instance="test"}'
+        values: '0+6000x12'
+    alert_rule_test:
+      - eval_time: 8m
+        alertname: ExironSlowResponses
+        exp_alerts:
+          - exp_labels: {job: exiron, instance: test, severity: warning}
+            exp_annotations: {summary: Response latency exceeds provisional 24-hook workload targets}
+  - name: slow responses do not alert on tiny sample counts
+    interval: 1m
+    input_series:
+      - series: 'exiron_response_duration_seconds_bucket{job="exiron",instance="test",le="1"}'
+        values: '0+0x20'
+      - series: 'exiron_response_duration_seconds_bucket{job="exiron",instance="test",le="2.5"}'
+        values: '0+1x20'
+      - series: 'exiron_response_duration_seconds_bucket{job="exiron",instance="test",le="+Inf"}'
+        values: '0+1x20'
+      - series: 'exiron_response_duration_seconds_count{job="exiron",instance="test"}'
+        values: '0+1x20'
+    alert_rule_test:
+      - eval_time: 20m
+        alertname: ExironSlowResponses
+        exp_alerts: []
+  - name: shared buffer pressure includes deliveries and waits ten minutes
+    interval: 1m
+    input_series:
+      - series: 'exiron_buffered_bytes{job="exiron",instance="test"}'
+        values: '85+0x15'
+      - series: 'exiron_buffered_bytes_limit{job="exiron",instance="test"}'
+        values: '100+0x15'
+    alert_rule_test:
+      - eval_time: 9m
+        alertname: ExironGlobalBufferPressure
+        exp_alerts: []
+      - eval_time: 11m
+        alertname: ExironGlobalBufferPressure
+        exp_alerts:
+          - exp_labels: {job: exiron, instance: test, severity: warning}
+            exp_annotations: {summary: Exiron shared buffered payload exceeds 80% of its limit}
+  - name: shared budget rejection requires sustained request rejections
+    interval: 1m
+    input_series:
+      - series: 'exiron_buffer_request_rejections_total{job="exiron",instance="test"}'
+        values: '0+1x10'
+    alert_rule_test:
+      - eval_time: 1m
+        alertname: ExironGlobalBufferRejections
+        exp_alerts: []
+      - eval_time: 4m
+        alertname: ExironGlobalBufferRejections
+        exp_alerts:
+          - exp_labels: {job: exiron, instance: test, severity: warning}
+            exp_annotations: {summary: Exiron is rejecting new requests at its shared payload limit}
+  - name: outgoing payload pressure waits ten minutes
+    interval: 1m
+    input_series:
+      - series: 'exiron_in_flight_send_bytes{job="exiron",instance="test"}'
+        values: '85+0x15'
+      - series: 'exiron_in_flight_send_bytes_limit{job="exiron",instance="test"}'
+        values: '100+0x15'
+    alert_rule_test:
+      - eval_time: 9m
+        alertname: ExironSendBytePressure
+        exp_alerts: []
+      - eval_time: 11m
+        alertname: ExironSendBytePressure
+        exp_alerts:
+          - exp_labels: {job: exiron, instance: test, severity: warning}
+            exp_annotations: {summary: Exiron active send payload exceeds 80% of its global limit}
+  - name: outgoing byte rejection alert waits two minutes
+    interval: 1m
+    input_series:
+      - series: 'exiron_send_byte_capacity_rejections_total{job="exiron",instance="test"}'
+        values: '0+1x10'
+    alert_rule_test:
+      - eval_time: 1m
+        alertname: ExironSendByteRejections
+        exp_alerts: []
+      - eval_time: 4m
+        alertname: ExironSendByteRejections
+        exp_alerts:
+          - exp_labels: {job: exiron, instance: test, severity: warning}
+            exp_annotations: {summary: Exiron is rejecting sends with byte capacity exhausted}
+  - name: Telegram suppression alert requires sustained skipped attempts
+    interval: 1m
+    input_series:
+      - series: 'exiron_telegram_suppressed_attempts_total{job="exiron",instance="test"}'
+        values: '0+1x15'
+    alert_rule_test:
+      - eval_time: 1m
+        alertname: ExironTelegramSuppressedAttempts
+        exp_alerts: []
+      - eval_time: 6m
+        alertname: ExironTelegramSuppressedAttempts
+        exp_alerts:
+          - exp_labels: {job: exiron, instance: test, severity: warning}
+            exp_annotations: {summary: Telegram send attempts are being suppressed after definitive rejections}

@@ -1,0 +1,12 @@
+{
+  "type": "messages",
+  "delivery_id": "delivery-example",
+  "messages": [
+    {
+      "msgtype": "request",
+      "req_id": "req-1",
+      "datatype": "text",
+      "data": "aGVsbG8="
+    }
+  ]
+}

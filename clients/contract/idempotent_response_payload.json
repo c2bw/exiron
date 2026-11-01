@@ -1,0 +1,6 @@
+{
+  "req_id": "req-1",
+  "datatype": "text",
+  "data": "aGVsbG8=",
+  "idempotency_key": "reply-1"
+}

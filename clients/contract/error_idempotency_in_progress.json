@@ -1,0 +1,4 @@
+{
+  "code": "idempotency_in_progress",
+  "error": "operation with this idempotency key is still running"
+}

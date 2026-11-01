@@ -1,0 +1,9 @@
+{
+  "ok": true,
+  "cancelled": true,
+  "delivery_status": "partial",
+  "message_ids": [
+    901,
+    902
+  ]
+}

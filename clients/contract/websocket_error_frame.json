@@ -1,0 +1,6 @@
+{
+  "type": "error",
+  "code": "hook_already_connected",
+  "error": "hook already connected",
+  "retry_after_ms": 12
+}

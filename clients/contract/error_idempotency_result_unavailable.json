@@ -1,0 +1,4 @@
+{
+  "code": "idempotency_result_unavailable",
+  "error": "operation ran but its result cannot be retained"
+}

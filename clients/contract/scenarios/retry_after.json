@@ -1,0 +1,30 @@
+{
+  "scenario_version": "1",
+  "id": "retry_after_handling",
+  "category": "retries",
+  "transport": "websocket",
+  "cases": [
+    {
+      "id": "replacement_backoff",
+      "request": {"frame_type": "connected"},
+      "response": {
+        "status": 409,
+        "frame_fixture": "websocket_error_frame.json",
+        "error_code": "hook_already_connected",
+        "retry_after_ms": "manifest-defined-positive-duration",
+        "retry_safe": true
+      }
+    },
+    {
+      "id": "rate_limit_backoff",
+      "request": {"method": "POST", "path": "/api/auth"},
+      "response": {
+        "status": 429,
+        "response_fixture": "error_response.json",
+        "error_code": "rate_limited",
+        "retry_after": true,
+        "retry_safe": true
+      }
+    }
+  ]
+}

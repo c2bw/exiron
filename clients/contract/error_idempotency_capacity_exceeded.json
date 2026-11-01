@@ -1,0 +1,4 @@
+{
+  "code": "idempotency_capacity_exceeded",
+  "error": "idempotency receipt capacity is full"
+}

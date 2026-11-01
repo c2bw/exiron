@@ -1,0 +1,587 @@
+{
+  "protocol_version": "1.19",
+  "capabilities": [
+    "http_auth",
+    "http_status",
+    "http_polling",
+    "http_delivery_ack",
+    "http_responses",
+    "http_push",
+    "websocket",
+    "listen_mode",
+    "sticker_emoji",
+    "telegram_bot_selection",
+    "text_updates",
+    "message_edits",
+    "chat_actions",
+    "forum_topics",
+    "media_albums",
+    "message_metadata",
+    "inline_keyboards",
+    "callback_queries",
+    "long_text",
+    "request_cancellation",
+    "delivery_diagnostics",
+    "reply_context",
+    "caption_overflow",
+    "send_fairness",
+    "client_presence",
+    "cooperative_cancellation",
+    "graceful_drain",
+    "handler_failure_reporting",
+    "http_lease_renewal",
+    "idempotent_mutations",
+    "capability_discovery",
+    "client_retirement",
+    "client_runtime_reporting",
+    "followup_context",
+    "client_versions"
+  ],
+  "datatypes": [
+    "text",
+    "audio",
+    "video",
+    "image",
+    "file",
+    "sticker",
+    "album",
+    "callback",
+    "keyboard"
+  ],
+  "errors": {
+    "missing_token": {
+      "status": 401,
+      "message": "missing bearer token",
+      "reasons": [
+        "missing_token"
+      ]
+    },
+    "invalid_token": {
+      "status": 401,
+      "message": "invalid token",
+      "reasons": [
+        "invalid_token"
+      ]
+    },
+    "invalid_client_id": {
+      "status": 400,
+      "message": "invalid client id",
+      "reasons": [
+        "invalid_client_id"
+      ]
+    },
+    "server_disabled": {
+      "status": 503,
+      "message": "exiron disabled",
+      "reasons": [
+        "disabled"
+      ]
+    },
+    "request_not_found": {
+      "status": 404,
+      "message": "request not found",
+      "reasons": [
+        "request_not_found"
+      ]
+    },
+    "request_not_assigned": {
+      "status": 409,
+      "message": "request not assigned",
+      "reasons": [
+        "request_not_assigned"
+      ]
+    },
+    "request_in_flight": {
+      "status": 409,
+      "message": "request response in flight",
+      "reasons": [
+        "request_in_flight"
+      ]
+    },
+    "hook_already_connected": {
+      "status": 409,
+      "message": "hook already connected",
+      "reasons": [
+        "hook_already_connected"
+      ]
+    },
+    "chat_not_pushable": {
+      "status": 400,
+      "message": "chat not pushable",
+      "reasons": [
+        "chat_not_pushable"
+      ]
+    },
+    "invalid_chat_id": {
+      "status": 400,
+      "message": "invalid chat id",
+      "reasons": [
+        "invalid_chat_id"
+      ]
+    },
+    "invalid_datatype": {
+      "status": 400,
+      "message": "invalid datatype",
+      "reasons": [
+        "invalid_datatype"
+      ]
+    },
+    "invalid_payload": {
+      "status": 400,
+      "message": "invalid payload",
+      "reasons": [
+        "invalid_payload"
+      ]
+    },
+    "invalid_base64_data": {
+      "status": 400,
+      "message": "invalid base64 data",
+      "reasons": [
+        "invalid_base64_data"
+      ]
+    },
+    "telegram_bot_not_configured": {
+      "status": 503,
+      "message": "telegram bot not configured",
+      "reasons": [
+        "telegram_bot_not_configured"
+      ]
+    },
+    "telegram_bot_forbidden": {
+      "status": 503,
+      "message": "telegram bot forbidden",
+      "reasons": [
+        "telegram_bot_forbidden"
+      ]
+    },
+    "telegram_bot_unauthorized": {
+      "status": 503,
+      "message": "telegram bot unauthorized",
+      "reasons": [
+        "telegram_bot_unauthorized"
+      ]
+    },
+    "send_queue_full": {
+      "status": 503,
+      "message": "send queue full",
+      "reasons": [
+        "send_queue_full"
+      ]
+    },
+    "send_unavailable": {
+      "status": 503,
+      "message": "send unavailable",
+      "reasons": [
+        "send_unavailable"
+      ]
+    },
+    "telegram_delivery_timeout": {
+      "status": 504,
+      "message": "telegram delivery result timed out",
+      "reasons": [
+        "telegram_delivery_timeout"
+      ]
+    },
+    "telegram_file_path_empty": {
+      "status": 400,
+      "message": "telegram file path empty",
+      "reasons": [
+        "telegram_file_path_empty"
+      ]
+    },
+    "telegram_file_too_large": {
+      "status": 400,
+      "message": "telegram file too large",
+      "reasons": [
+        "telegram_file_too_large"
+      ]
+    },
+    "rate_limited": {
+      "status": 429,
+      "message": "too many requests",
+      "reasons": [
+        "rate_limited"
+      ]
+    },
+    "internal_error": {
+      "status": 500,
+      "message": "internal error",
+      "reasons": [
+        "internal_error",
+        "unknown"
+      ]
+    },
+    "request_cancelled": {
+      "status": 409,
+      "message": "request cancelled",
+      "reasons": [
+        "request_cancelled"
+      ]
+    },
+    "delivery_not_found": {
+      "status": 404,
+      "message": "delivery diagnostics not found",
+      "reasons": [
+        "delivery_not_found"
+      ]
+    },
+    "hook_send_queue_full": {
+      "status": 503,
+      "message": "hook send queue full",
+      "reasons": [
+        "hook_send_queue_full"
+      ]
+    },
+    "draining": {
+      "status": 503,
+      "message": "intake paused for drain",
+      "reasons": [
+        "draining"
+      ]
+    },
+    "client_lease_lost": {
+      "status": 409,
+      "message": "HTTP client lease could not be confirmed",
+      "reasons": [
+        "client_lease_lost"
+      ]
+    },
+    "idempotency_in_progress": {
+      "status": 409,
+      "message": "operation with this idempotency key is still running",
+      "reasons": [
+        "idempotency_in_progress"
+      ]
+    },
+    "idempotency_conflict": {
+      "status": 409,
+      "message": "idempotency key was used for a different operation",
+      "reasons": [
+        "idempotency_conflict"
+      ]
+    },
+    "idempotency_capacity_exceeded": {
+      "status": 503,
+      "message": "idempotency receipt capacity is full",
+      "reasons": [
+        "idempotency_capacity_exceeded"
+      ]
+    },
+    "idempotency_result_unavailable": {
+      "status": 409,
+      "message": "operation ran but its result cannot be retained",
+      "reasons": [
+        "idempotency_result_unavailable"
+      ]
+    }
+  },
+  "websocket": {
+    "server_frame_types": [
+      "connected",
+      "messages",
+      "pong",
+      "error"
+    ],
+    "client_frame_types": [
+      "ping",
+      "ack"
+    ]
+  },
+  "fixtures": {
+    "http": [
+      {
+        "file": "auth_response.json",
+        "schema": "AuthResponse",
+        "direction": "response"
+      },
+      {
+        "file": "requests_response.json",
+        "schema": "RequestsResponse",
+        "direction": "response"
+      },
+      {
+        "file": "response_payload.json",
+        "schema": "ResponsePayload",
+        "direction": "request"
+      },
+      {
+        "file": "push_payload.json",
+        "schema": "DataPayload",
+        "direction": "request"
+      },
+      {
+        "file": "push_bot_payload.json",
+        "schema": "DataPayload",
+        "direction": "request"
+      },
+      {
+        "file": "push_sticker_payload.json",
+        "schema": "DataPayload",
+        "direction": "request"
+      },
+      {
+        "file": "response_sticker_payload.json",
+        "schema": "ResponsePayload",
+        "direction": "request"
+      },
+      {
+        "file": "push_chat_payload.json",
+        "schema": "DataPayload",
+        "direction": "request"
+      },
+      {
+        "file": "ok_response.json",
+        "schema": "OkResponse",
+        "direction": "response"
+      },
+      {
+        "file": "push_response.json",
+        "schema": "PushResponse",
+        "direction": "response"
+      },
+      {
+        "file": "status_response.json",
+        "schema": "Status",
+        "direction": "response"
+      },
+      {
+        "file": "error_response.json",
+        "schema": "Error",
+        "direction": "response"
+      },
+      {
+        "file": "response_update_payload.json",
+        "schema": "ResponsePayload",
+        "direction": "request"
+      },
+      {
+        "file": "action_payload.json",
+        "schema": "ActionPayload",
+        "direction": "request"
+      },
+      {
+        "file": "album_push_payload.json",
+        "schema": "DataPayload",
+        "direction": "request"
+      },
+      {
+        "file": "requests_rich_response.json",
+        "schema": "RequestsResponse",
+        "direction": "response"
+      },
+      {
+        "file": "requests_callback_response.json",
+        "schema": "RequestsResponse",
+        "direction": "response"
+      },
+      {
+        "file": "response_keyboard_payload.json",
+        "schema": "ResponsePayload",
+        "direction": "request"
+      },
+      {
+        "file": "callback_keyboard_payload.json",
+        "schema": "ResponsePayload",
+        "direction": "request"
+      },
+      {
+        "file": "long_response_update.json",
+        "schema": "OkResponse",
+        "direction": "response"
+      },
+      {
+        "file": "long_response_payload.json",
+        "schema": "ResponsePayload",
+        "direction": "request"
+      },
+      {
+        "file": "cancel_payload.json",
+        "schema": "CancelPayload",
+        "direction": "request"
+      },
+      {
+        "file": "cancel_response.json",
+        "schema": "CancelResponse",
+        "direction": "response"
+      },
+      {
+        "file": "cancelled_error.json",
+        "schema": "Error",
+        "direction": "response"
+      },
+      {
+        "file": "delivery_diagnostics.json",
+        "schema": "DeliveryDiagnostics",
+        "direction": "response"
+      },
+      {
+        "file": "delivery_error.json",
+        "schema": "Error",
+        "direction": "response"
+      },
+      {
+        "file": "response_reply_context_payload.json",
+        "schema": "ResponsePayload",
+        "direction": "request"
+      },
+      {
+        "file": "response_reply_context_update_payload.json",
+        "schema": "ResponsePayload",
+        "direction": "request"
+      },
+      {
+        "file": "response_caption_overflow_payload.json",
+        "schema": "ResponsePayload",
+        "direction": "request"
+      },
+      {
+        "file": "push_caption_overflow_payload.json",
+        "schema": "DataPayload",
+        "direction": "request"
+      },
+      {
+        "file": "error_hook_send_queue_full.json",
+        "schema": "Error",
+        "direction": "response"
+      },
+      {
+        "file": "status_client_presence_response.json",
+        "schema": "Status",
+        "direction": "response"
+      },
+      {
+        "file": "request_state_expired_response.json",
+        "schema": "RequestState",
+        "direction": "response"
+      },
+      {
+        "file": "error_draining.json",
+        "schema": "Error",
+        "direction": "response"
+      },
+      {
+        "file": "handler_report_retrying.json",
+        "schema": "HandlerReport",
+        "direction": "request"
+      },
+      {
+        "file": "client_lease_request.json",
+        "schema": "ClientLeaseRequest",
+        "direction": "request"
+      },
+      {
+        "file": "client_lease_response.json",
+        "schema": "ClientLeaseResponse",
+        "direction": "response"
+      },
+      {
+        "file": "error_client_lease_lost.json",
+        "schema": "Error",
+        "direction": "response"
+      },
+      {
+        "file": "error_idempotency_in_progress.json",
+        "schema": "Error",
+        "direction": "response"
+      },
+      {
+        "file": "error_idempotency_conflict.json",
+        "schema": "Error",
+        "direction": "response"
+      },
+      {
+        "file": "error_idempotency_capacity_exceeded.json",
+        "schema": "Error",
+        "direction": "response"
+      },
+      {
+        "file": "error_idempotency_result_unavailable.json",
+        "schema": "Error",
+        "direction": "response"
+      },
+      {
+        "file": "idempotent_response_payload.json",
+        "schema": "IdempotentResponsePayload",
+        "direction": "request"
+      },
+      {
+        "file": "idempotent_push_payload.json",
+        "schema": "IdempotentPushPayload",
+        "direction": "request"
+      },
+      {
+        "file": "capabilities_response.json",
+        "schema": "CapabilityResponse",
+        "direction": "response"
+      },
+      {
+        "file": "client_retire_request.json",
+        "schema": "ClientLeaseRequest",
+        "direction": "request"
+      },
+      {
+        "file": "client_runtime_report.json",
+        "schema": "ClientRuntimeReport",
+        "direction": "request"
+      },
+      {
+        "file": "requests_followup_response.json",
+        "schema": "RequestsResponse",
+        "direction": "response"
+      }
+    ],
+    "websocket": [
+      {
+        "file": "websocket_ack_frame.json",
+        "type": "ack",
+        "direction": "request",
+        "required": [
+          "type",
+          "delivery_id"
+        ]
+      },
+      {
+        "file": "websocket_connected_frame.json",
+        "type": "connected",
+        "direction": "response",
+        "required": [
+          "type",
+          "hook",
+          "client_id",
+          "listen",
+          "server_version",
+          "protocol_version",
+          "capabilities"
+        ]
+      },
+      {
+        "file": "websocket_error_frame.json",
+        "type": "error",
+        "direction": "response",
+        "required": [
+          "type",
+          "code",
+          "error"
+        ]
+      },
+      {
+        "file": "websocket_messages_frame.json",
+        "type": "messages",
+        "direction": "response",
+        "required": [
+          "type",
+          "delivery_id",
+          "messages"
+        ]
+      },
+      {
+        "file": "websocket_pong_frame.json",
+        "type": "pong",
+        "direction": "response",
+        "required": [
+          "type"
+        ]
+      }
+    ]
+  }
+}

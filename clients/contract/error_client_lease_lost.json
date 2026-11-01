@@ -1,0 +1,4 @@
+{
+  "code": "client_lease_lost",
+  "error": "HTTP client lease could not be confirmed"
+}

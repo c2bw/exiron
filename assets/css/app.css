@@ -1,0 +1,770 @@
+/* See the Tailwind configuration guide for advanced usage
+   https://tailwindcss.com/docs/configuration */
+
+@import "tailwindcss" source(none);
+@import "phoenix-colocated/exiron/colocated.css";
+@import "./monitor.css";
+@source "../css";
+@source "../js";
+@source "../../lib/exiron_web";
+/* Required for Tailwind to automatically pick up changes in colocated CSS files in dev */
+@source "../../_build/dev/phoenix-colocated/exiron/*/";
+
+/* A Tailwind plugin that makes "hero-#{ICON}" classes available.
+   The heroicons installation itself is managed by your mix.exs */
+@plugin "../vendor/heroicons";
+
+@theme {
+  --color-base-100: oklch(99% 0.003 105);
+  --color-base-200: oklch(96.5% 0.008 105);
+  --color-base-300: oklch(91.5% 0.012 105);
+  --color-base-content: oklch(24% 0.018 160);
+  --color-primary: oklch(61% 0.16 155);
+  --color-primary-content: oklch(98% 0.016 155);
+  --color-secondary: oklch(55% 0.027 264.364);
+  --color-secondary-content: oklch(98% 0.002 247.839);
+  --color-accent: oklch(0% 0 0);
+  --color-accent-content: oklch(100% 0 0);
+  --color-neutral: oklch(44% 0.017 285.786);
+  --color-neutral-content: oklch(98% 0 0);
+  --color-info: oklch(62% 0.214 259.815);
+  --color-info-content: oklch(97% 0.014 254.604);
+  --color-success: oklch(70% 0.14 182.503);
+  --color-success-content: oklch(98% 0.014 180.72);
+  --color-warning: oklch(66% 0.179 58.318);
+  --color-warning-content: oklch(98% 0.022 95.277);
+  --color-error: oklch(58% 0.253 17.585);
+  --color-error-content: oklch(96% 0.015 12.422);
+}
+
+:root,
+[data-theme="light"] {
+  color-scheme: light;
+  --color-base-100: oklch(99% 0.003 105);
+  --color-base-200: oklch(96.5% 0.008 105);
+  --color-base-300: oklch(91.5% 0.012 105);
+  --color-base-content: oklch(24% 0.018 160);
+  --color-primary: oklch(61% 0.16 155);
+  --color-primary-content: oklch(98% 0.016 155);
+  --color-secondary: oklch(55% 0.027 264.364);
+  --color-secondary-content: oklch(98% 0.002 247.839);
+  --color-accent: oklch(0% 0 0);
+  --color-accent-content: oklch(100% 0 0);
+  --color-neutral: oklch(44% 0.017 285.786);
+  --color-neutral-content: oklch(98% 0 0);
+  --color-info: oklch(62% 0.214 259.815);
+  --color-info-content: oklch(97% 0.014 254.604);
+  --color-success: oklch(70% 0.14 182.503);
+  --color-success-content: oklch(98% 0.014 180.72);
+  --color-warning: oklch(66% 0.179 58.318);
+  --color-warning-content: oklch(98% 0.022 95.277);
+  --color-error: oklch(58% 0.253 17.585);
+  --color-error-content: oklch(96% 0.015 12.422);
+}
+
+[data-theme="dark"] {
+  color-scheme: dark;
+  --color-base-100: oklch(16% 0.022 165);
+  --color-base-200: oklch(12.5% 0.022 165);
+  --color-base-300: oklch(31% 0.035 165);
+  --color-base-content: oklch(92% 0.018 160);
+  --color-primary: oklch(78% 0.19 148);
+  --color-primary-content: oklch(13% 0.035 150);
+  --color-secondary: oklch(76% 0.13 220);
+  --color-secondary-content: oklch(13% 0.03 225);
+  --color-accent: oklch(80% 0.14 82);
+  --color-accent-content: oklch(16% 0.035 82);
+  --color-neutral: oklch(28% 0.028 252);
+  --color-neutral-content: oklch(92% 0.016 160);
+  --color-info: oklch(74% 0.14 225);
+  --color-info-content: oklch(13% 0.03 225);
+  --color-success: oklch(76% 0.17 148);
+  --color-success-content: oklch(13% 0.035 150);
+  --color-warning: oklch(78% 0.15 82);
+  --color-warning-content: oklch(16% 0.035 82);
+  --color-error: oklch(70% 0.18 25);
+  --color-error-content: oklch(16% 0.035 25);
+}
+
+/* Add variants based on LiveView classes */
+@custom-variant phx-click-loading (.phx-click-loading&, .phx-click-loading &);
+@custom-variant phx-submit-loading (.phx-submit-loading&, .phx-submit-loading &);
+@custom-variant phx-change-loading (.phx-change-loading&, .phx-change-loading &);
+
+/* Use the data attribute for dark mode  */
+@custom-variant dark (&:where([data-theme=dark], [data-theme=dark] *));
+
+/* Make LiveView wrapper divs transparent for layout */
+[data-phx-session], [data-phx-teleported-src] { display: contents }
+
+html { background: var(--color-base-200); }
+
+body {
+  background-image:
+    radial-gradient(circle at 9% -5%, color-mix(in oklab, var(--color-primary) 10%, transparent) 0, transparent 34rem),
+    radial-gradient(circle at 92% 12%, color-mix(in oklab, var(--color-secondary) 6%, transparent) 0, transparent 30rem);
+  background-attachment: fixed;
+}
+
+button, a, input, select, textarea { -webkit-tap-highlight-color: transparent; }
+
+button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible {
+  outline: 2px solid color-mix(in oklab, var(--color-primary) 70%, transparent);
+  outline-offset: 2px;
+}
+
+.ex-request-scroll {
+  max-height: clamp(20rem, 60vh, 42rem);
+  overflow-y: scroll;
+  overscroll-behavior-y: contain;
+  scrollbar-gutter: stable;
+  scrollbar-color: color-mix(in oklab, var(--color-primary) 55%, var(--color-base-300)) var(--color-base-200);
+}
+
+.ex-panel {
+  border: 1px solid color-mix(in oklab, var(--color-base-300) 92%, transparent);
+  border-radius: 1rem;
+  background: color-mix(in oklab, var(--color-base-100) 97%, transparent);
+  box-shadow:
+    0 1px 0 color-mix(in oklab, white 65%, transparent) inset,
+    0 1px 2px color-mix(in oklab, var(--color-base-content) 5%, transparent),
+    0 20px 50px -34px color-mix(in oklab, var(--color-base-content) 30%, transparent);
+}
+
+.ex-config-hero {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  border: 1px solid color-mix(in oklab, var(--color-primary) 22%, #14231e);
+  border-radius: 1rem;
+  background:
+    radial-gradient(circle at 80% -50%, rgba(52, 211, 153, 0.18), transparent 22rem),
+    linear-gradient(135deg, #172721 0%, #101b18 62%, #0c1513 100%);
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.07) inset,
+    0 22px 55px -42px rgba(7, 25, 19, 0.85);
+}
+
+.ex-config-hero::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  opacity: 0.12;
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.08) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.08) 1px, transparent 1px);
+  background-size: 34px 34px;
+  mask-image: linear-gradient(90deg, transparent, black);
+}
+
+.ex-config-index {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  overflow: hidden;
+  border: 1px solid color-mix(in oklab, var(--color-base-300) 92%, transparent);
+  border-radius: 0.75rem;
+  background: color-mix(in oklab, var(--color-base-100) 95%, transparent);
+}
+
+.ex-config-index a {
+  display: flex;
+  min-width: 0;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  border-right: 1px solid var(--color-base-300);
+  padding: 0.55rem 0.4rem;
+  color: color-mix(in oklab, var(--color-base-content) 52%, transparent);
+  font-size: 0.625rem;
+  font-weight: 750;
+  transition: color 150ms ease, background-color 150ms ease;
+}
+
+.ex-config-index a:last-child {
+  border-right: 0;
+}
+
+.ex-config-index a:hover {
+  background: color-mix(in oklab, var(--color-primary) 7%, var(--color-base-100));
+  color: var(--color-primary);
+}
+
+.ex-config-workspace .ex-panel {
+  border-color: color-mix(in oklab, var(--color-base-300) 88%, var(--color-base-content) 12%);
+  background: var(--color-base-100);
+  box-shadow:
+    0 1px 0 color-mix(in oklab, white 72%, transparent) inset,
+    0 8px 24px -22px color-mix(in oklab, var(--color-base-content) 34%, transparent);
+}
+
+.ex-config-workspace .ex-panel-row {
+  background: var(--color-base-100);
+}
+
+.ex-config-workspace .ex-panel-row:hover {
+  background: color-mix(in oklab, var(--color-primary) 5%, var(--color-base-100));
+}
+
+.ex-config-workspace .ex-readout {
+  border-color: color-mix(in oklab, var(--color-base-300) 80%, var(--color-base-content) 20%);
+  background: var(--color-base-200);
+}
+
+.ex-config-card-grid {
+  display: grid;
+  gap: 0.5rem;
+  padding: 0.5rem;
+}
+
+.ex-config-card-grid > .ex-empty {
+  grid-column: 1 / -1;
+}
+
+.ex-config-item {
+  min-width: 0;
+  border: 1px solid color-mix(in oklab, var(--color-base-300) 90%, var(--color-base-content) 10%);
+  border-radius: 0.7rem;
+  padding: 0.7rem;
+  background: var(--color-base-100);
+  box-shadow: 0 1px 2px color-mix(in oklab, var(--color-base-content) 5%, transparent);
+  transition: border-color 150ms ease, box-shadow 150ms ease, transform 150ms ease;
+}
+
+.ex-config-item:hover {
+  border-color: color-mix(in oklab, var(--color-primary) 42%, var(--color-base-300));
+  box-shadow: 0 10px 24px -20px color-mix(in oklab, var(--color-primary) 52%, transparent);
+  transform: translateY(-1px);
+}
+
+.ex-item-label {
+  color: color-mix(in oklab, var(--color-base-content) 56%, transparent);
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 0.55rem;
+  font-weight: 750;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.ex-item-count {
+  display: inline-flex;
+  align-items: center;
+  border: 1px solid var(--color-base-300);
+  border-radius: 999px;
+  padding: 0.18rem 0.45rem;
+  background: var(--color-base-200);
+  color: color-mix(in oklab, var(--color-base-content) 68%, transparent);
+  font-size: 0.6rem;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+[data-theme="dark"] .ex-config-workspace .ex-panel {
+  border-color: color-mix(in oklab, var(--color-base-300) 88%, white 12%);
+  background: var(--color-base-100);
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.055) inset,
+    0 10px 28px -24px rgba(0, 0, 0, 0.8);
+}
+
+[data-theme="dark"] .ex-config-workspace .ex-panel-row {
+  background: var(--color-base-100);
+}
+
+[data-theme="dark"] .ex-config-workspace .ex-panel-row:hover {
+  background: color-mix(in oklab, var(--color-base-100) 92%, var(--color-primary) 8%);
+}
+
+[data-theme="dark"] .ex-config-item {
+  border-color: color-mix(in oklab, var(--color-base-300) 82%, white 18%);
+  background: color-mix(in oklab, var(--color-base-100) 94%, var(--color-base-200) 6%);
+}
+
+[data-theme="dark"] .ex-config-item:hover {
+  border-color: color-mix(in oklab, var(--color-primary) 48%, var(--color-base-300));
+  background: color-mix(in oklab, var(--color-base-100) 90%, var(--color-primary) 10%);
+}
+
+[data-theme="dark"] .ex-config-workspace .ex-config-index {
+  border-color: color-mix(in oklab, var(--color-base-300) 88%, white 12%);
+  background: var(--color-base-100);
+}
+
+[data-theme="dark"] .ex-config-workspace .ex-config-index a {
+  border-color: color-mix(in oklab, var(--color-base-300) 88%, white 12%);
+  color: color-mix(in oklab, var(--color-base-content) 72%, transparent);
+}
+
+@media (min-width: 768px) {
+  #exiron-chat-routes,
+  #exiron-middlewares,
+  #exiron-hooks {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+#exiron-telegram-bots,
+#exiron-chat-routes,
+#exiron-middlewares,
+#exiron-hooks,
+#exiron-resolved-routes {
+  scroll-margin-top: 6rem;
+}
+
+.ex-panel-row {
+  position: relative;
+  transition: background-color 150ms ease, box-shadow 150ms ease;
+}
+
+.ex-panel-row:hover {
+  background: color-mix(in oklab, var(--color-primary) 4.5%, var(--color-base-100));
+  box-shadow: inset 2px 0 0 color-mix(in oklab, var(--color-primary) 72%, transparent);
+}
+
+.ex-kicker {
+  color: var(--color-primary);
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 0.6rem;
+  font-weight: 750;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.ex-control-overview {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  border: 1px solid color-mix(in oklab, var(--color-primary) 22%, #14231e);
+  border-radius: 1.35rem;
+  background:
+    radial-gradient(circle at 8% -40%, rgba(52, 211, 153, 0.18), transparent 22rem),
+    linear-gradient(135deg, #172721 0%, #101b18 60%, #0c1513 100%);
+  box-shadow:
+    0 1px 0 rgba(255,255,255,0.07) inset,
+    0 26px 65px -42px rgba(7, 25, 19, 0.85);
+}
+
+.ex-control-overview::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  opacity: 0.16;
+  background-image:
+    linear-gradient(rgba(255,255,255,0.07) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.07) 1px, transparent 1px);
+  background-size: 38px 38px;
+  mask-image: linear-gradient(90deg, black, transparent 65%);
+}
+
+.ex-control-header {
+  display: flex;
+  min-height: 4.25rem;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+  background: rgba(255,255,255,0.018);
+}
+
+.ex-control-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1px;
+  background: rgba(255,255,255,0.08);
+}
+
+.ex-control-telegram,
+.ex-control-stat {
+  min-height: 6.5rem;
+  padding: 0.9rem 1rem;
+  background: rgba(10, 21, 17, 0.94);
+}
+
+.ex-control-stat {
+  transition: background-color 150ms ease;
+}
+
+.ex-control-stat:hover {
+  background: rgba(20, 43, 34, 0.96);
+}
+
+.ex-control-label {
+  color: rgba(255,255,255,0.38);
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 0.55rem;
+  font-weight: 750;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.ex-nav-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  border-radius: 0.55rem;
+  padding: 0.5rem 0.65rem;
+  color: color-mix(in oklab, var(--color-base-content) 68%, transparent);
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  transition: color 150ms ease, background-color 150ms ease;
+}
+
+.ex-nav-link:hover {
+  color: var(--color-primary);
+  background: color-mix(in oklab, var(--color-primary) 9%, transparent);
+}
+
+.ex-app-header {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 0.65rem;
+  align-items: center;
+  border: 1px solid color-mix(in oklab, var(--color-base-300) 85%, transparent);
+  border-radius: 1.25rem;
+  padding: 0.65rem;
+  background: color-mix(in oklab, var(--color-base-100) 92%, transparent);
+  box-shadow:
+    0 1px 0 color-mix(in oklab, white 70%, transparent) inset,
+    0 14px 35px -26px color-mix(in oklab, var(--color-base-content) 35%, transparent);
+}
+
+#exiron-brand {
+  grid-column: 1;
+  grid-row: 1;
+}
+
+.ex-brand-mark {
+  display: grid;
+  width: 2.5rem;
+  height: 2.5rem;
+  flex: none;
+  place-items: center;
+  overflow: hidden;
+  border-radius: 0.8rem;
+  box-shadow:
+    0 0 0 1px color-mix(in oklab, var(--color-base-300) 80%, transparent),
+    0 8px 18px -12px color-mix(in oklab, var(--color-base-content) 50%, transparent);
+  transition: transform 180ms ease, box-shadow 180ms ease;
+}
+
+#exiron-brand:hover .ex-brand-mark {
+  transform: rotate(-3deg) translateY(-1px);
+  box-shadow:
+    0 0 0 1px color-mix(in oklab, var(--color-primary) 35%, transparent),
+    0 10px 22px -12px color-mix(in oklab, var(--color-primary) 60%, transparent);
+}
+
+.ex-app-nav {
+  grid-column: 1 / -1;
+  grid-row: 2;
+  padding: 0.25rem;
+  border-radius: 0.85rem;
+  background: color-mix(in oklab, var(--color-base-200) 78%, transparent);
+  box-shadow: inset 0 1px 2px color-mix(in oklab, var(--color-base-content) 5%, transparent);
+}
+
+.ex-app-nav-link {
+  position: relative;
+  display: flex;
+  min-height: 2.25rem;
+  align-items: center;
+  justify-content: center;
+  gap: 0.45rem;
+  border: 1px solid transparent;
+  border-radius: 0.65rem;
+  padding: 0.45rem 0.75rem;
+  color: color-mix(in oklab, var(--color-base-content) 55%, transparent);
+  font-size: 0.65rem;
+  font-weight: 750;
+  letter-spacing: -0.01em;
+  transition:
+    color 160ms ease,
+    background-color 160ms ease,
+    border-color 160ms ease,
+    box-shadow 160ms ease,
+    transform 160ms ease;
+}
+
+.ex-app-nav-link:hover {
+  color: var(--color-base-content);
+  background: color-mix(in oklab, var(--color-base-100) 65%, transparent);
+}
+
+.ex-app-nav-link-active {
+  border-color: color-mix(in oklab, var(--color-primary) 75%, transparent);
+  background: var(--color-primary);
+  color: var(--color-primary-content);
+  box-shadow:
+    0 1px 0 color-mix(in oklab, white 22%, transparent) inset,
+    0 8px 18px -12px color-mix(in oklab, var(--color-primary) 80%, transparent);
+}
+
+.ex-app-nav-link-active:hover {
+  color: var(--color-primary-content);
+  background: color-mix(in oklab, var(--color-primary) 90%, black);
+  transform: translateY(-1px);
+}
+
+.ex-header-tools {
+  grid-column: 2;
+  grid-row: 1;
+}
+
+.ex-system-pill {
+  display: inline-flex;
+  height: 2.25rem;
+  align-items: center;
+  gap: 0.5rem;
+  border: 1px solid color-mix(in oklab, var(--color-success) 20%, var(--color-base-300));
+  border-radius: 999px;
+  padding: 0 0.65rem;
+  background: color-mix(in oklab, var(--color-success) 7%, var(--color-base-100));
+  color: color-mix(in oklab, var(--color-success) 75%, var(--color-base-content));
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 0.55rem;
+  font-weight: 750;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.ex-theme-toggle {
+  position: relative;
+  display: grid;
+  width: 5.75rem;
+  height: 2.25rem;
+  grid-template-columns: repeat(3, 1fr);
+  align-items: center;
+  overflow: hidden;
+  border: 1px solid color-mix(in oklab, var(--color-base-300) 92%, transparent);
+  border-radius: 0.75rem;
+  padding: 0.2rem;
+  background: color-mix(in oklab, var(--color-base-200) 76%, transparent);
+  box-shadow: inset 0 1px 2px color-mix(in oklab, var(--color-base-content) 5%, transparent);
+}
+
+.ex-theme-indicator {
+  position: absolute;
+  top: 0.2rem;
+  bottom: 0.2rem;
+  left: 0.2rem;
+  width: calc((100% - 0.4rem) / 3);
+  border: 1px solid color-mix(in oklab, var(--color-base-300) 80%, transparent);
+  border-radius: 0.55rem;
+  background: var(--color-base-100);
+  box-shadow:
+    0 1px 0 color-mix(in oklab, white 60%, transparent) inset,
+    0 2px 6px color-mix(in oklab, var(--color-base-content) 9%, transparent);
+  transition: transform 180ms ease;
+}
+
+[data-theme="light"] .ex-theme-indicator { transform: translateX(100%); }
+[data-theme="dark"] .ex-theme-indicator { transform: translateX(200%); }
+[data-theme-source="system"] .ex-theme-indicator { transform: translateX(0); }
+
+.ex-theme-button {
+  z-index: 1;
+  display: grid;
+  height: 100%;
+  cursor: pointer;
+  place-items: center;
+  border-radius: 0.5rem;
+  color: color-mix(in oklab, var(--color-base-content) 65%, transparent);
+  transition: color 150ms ease, transform 150ms ease;
+}
+
+.ex-theme-button:hover {
+  color: var(--color-primary);
+  transform: translateY(-1px);
+}
+
+.ex-header-action {
+  display: grid;
+  width: 2.25rem;
+  height: 2.25rem;
+  place-items: center;
+  border: 1px solid color-mix(in oklab, var(--color-base-300) 92%, transparent);
+  border-radius: 0.75rem;
+  background: color-mix(in oklab, var(--color-base-100) 82%, transparent);
+  color: color-mix(in oklab, var(--color-base-content) 52%, transparent);
+  transition: color 150ms ease, border-color 150ms ease, background-color 150ms ease;
+}
+
+.ex-header-action:hover {
+  border-color: color-mix(in oklab, var(--color-error) 25%, var(--color-base-300));
+  background: color-mix(in oklab, var(--color-error) 7%, var(--color-base-100));
+  color: var(--color-error);
+}
+
+.ex-login-action {
+  display: inline-flex;
+  min-height: 2.25rem;
+  align-items: center;
+  gap: 0.45rem;
+  border-radius: 0.75rem;
+  padding: 0.45rem 0.75rem;
+  background: var(--color-primary);
+  color: var(--color-primary-content);
+  font-size: 0.7rem;
+  font-weight: 750;
+  transition: transform 150ms ease, box-shadow 150ms ease;
+}
+
+.ex-login-action:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 8px 18px -12px color-mix(in oklab, var(--color-primary) 75%, transparent);
+}
+
+.ex-page-head {
+  position: relative;
+  padding-left: 1rem;
+}
+
+.ex-page-head::before {
+  content: "";
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 3px;
+  border-radius: 999px;
+  background: var(--color-primary);
+  box-shadow: 0 0 16px color-mix(in oklab, var(--color-primary) 38%, transparent);
+}
+
+.ex-readout {
+  border: 1px solid color-mix(in oklab, var(--color-base-300) 82%, transparent);
+  border-radius: 0.375rem;
+  background: color-mix(in oklab, var(--color-base-200) 72%, transparent);
+  box-shadow: inset 0 1px 2px color-mix(in oklab, var(--color-base-content) 4%, transparent);
+}
+
+.ex-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  border-radius: 999px;
+  padding: 0.25rem 0.55rem;
+  font-size: 0.6875rem;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.ex-status-compact {
+  padding: 0.2rem 0.45rem;
+  font-size: 0.6rem;
+}
+
+.ex-section-head {
+  display: flex;
+  align-items: center;
+  min-height: 1.5rem;
+  gap: 0.65rem;
+}
+
+.ex-section-head::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(90deg, var(--color-base-300), transparent);
+}
+
+.ex-empty {
+  min-height: 5.5rem;
+  align-items: center;
+  justify-content: center;
+  color: color-mix(in oklab, var(--color-base-content) 48%, transparent);
+}
+
+[data-theme="dark"] .ex-panel {
+  box-shadow:
+    0 1px 0 color-mix(in oklab, white 4%, transparent) inset,
+    0 18px 48px -30px color-mix(in oklab, black 80%, transparent);
+}
+
+[data-theme="dark"] .ex-app-header {
+  box-shadow:
+    0 1px 0 color-mix(in oklab, white 5%, transparent) inset,
+    0 18px 42px -26px color-mix(in oklab, black 80%, transparent);
+}
+
+@media (min-width: 768px) {
+  .ex-app-header {
+    grid-template-columns: minmax(11rem, 1fr) auto minmax(11rem, 1fr);
+    gap: 1rem;
+  }
+
+  #exiron-brand {
+    grid-column: 1;
+    grid-row: 1;
+  }
+
+  .ex-app-nav {
+    grid-column: 2;
+    grid-row: 1;
+  }
+
+  .ex-header-tools {
+    grid-column: 3;
+    grid-row: 1;
+    justify-self: end;
+  }
+
+  .ex-control-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 1280px) {
+  .ex-control-grid {
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ex-panel-row,
+  .ex-nav-link,
+  .ex-control-stat,
+  .ex-app-nav-link,
+  .ex-brand-mark,
+  .ex-theme-indicator,
+  .ex-theme-button,
+  .ex-header-action,
+  .ex-login-action,
+  .ex-monitor-chat-card,
+  .ex-monitor-chat-card::before,
+  .ex-monitor-event-row {
+    transition: none;
+  }
+
+  .ex-app-nav-link-active:hover, .ex-theme-button:hover, .ex-login-action:hover {
+    transform: none;
+  }
+}
+
+.ex-action-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  border: 1px solid var(--color-base-300);
+  border-radius: 0.65rem;
+  background: var(--color-base-100);
+  padding: 0.55rem 0.8rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+  transition: background-color 150ms, border-color 150ms, color 150ms;
+}
+.ex-action-button:hover {
+  border-color: var(--color-primary);
+  color: var(--color-primary);
+}
+.ex-action-button:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 3px;
+}
+.ex-action-button:disabled {
+  cursor: wait;
+  opacity: 0.5;
+}

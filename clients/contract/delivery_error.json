@@ -1,0 +1,76 @@
+{
+  "code": "telegram_delivery_timeout",
+  "error": "telegram delivery result timed out",
+  "delivery": {
+    "id": "delivery-1",
+    "request_id": "request-1",
+    "operation": "respond",
+    "outcome": "failed",
+    "delivery_status": "partial",
+    "attempts": 4,
+    "planned_parts": 3,
+    "confirmed_parts": 1,
+    "rejected_parts": 1,
+    "unknown_parts": 0,
+    "in_flight_parts": 0,
+    "unattempted_parts": 1,
+    "omitted_parts": 0,
+    "retry_available": false,
+    "retry_safe": false,
+    "retry_action": "inspect_chat",
+    "last_error": {
+      "category": "rate_limited",
+      "message": "Telegram requires a delay before another attempt.",
+      "code": 429,
+      "retry_after_ms": 2000
+    },
+    "parts": [
+      {
+        "id": "part-1",
+        "index": 1,
+        "ordinal": 1,
+        "chat_id": 123,
+        "bot_name": "helper",
+        "operation": "send",
+        "status": "confirmed",
+        "attempts": 1,
+        "message_id": 901,
+        "message_ids": [
+          901
+        ],
+        "error": null
+      },
+      {
+        "id": "part-2",
+        "index": 2,
+        "ordinal": 2,
+        "chat_id": 123,
+        "bot_name": "helper",
+        "operation": "send",
+        "status": "rejected",
+        "attempts": 3,
+        "message_id": null,
+        "message_ids": [],
+        "error": {
+          "category": "rate_limited",
+          "message": "Telegram requires a delay before another attempt.",
+          "code": 429,
+          "retry_after_ms": 2000
+        }
+      },
+      {
+        "id": "part-3",
+        "index": 3,
+        "ordinal": 3,
+        "chat_id": 123,
+        "bot_name": "helper",
+        "operation": "send",
+        "status": "queued",
+        "attempts": 0,
+        "message_id": null,
+        "message_ids": [],
+        "error": null
+      }
+    ]
+  }
+}

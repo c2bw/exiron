@@ -1,0 +1,38 @@
+{
+  "scenario_version": "1",
+  "id": "websocket_lifecycle",
+  "category": "websocket",
+  "transport": "websocket",
+  "cases": [
+    {
+      "id": "connected",
+      "request": {"event": "authenticated connection", "capability": "websocket"},
+      "response": {"server_frame_type": "connected", "frame_fixture": "websocket_connected_frame.json", "protocol_version": "manifest", "capabilities": "manifest"}
+    },
+    {
+      "id": "messages",
+      "request": {"event": "queued delivery"},
+      "response": {"server_frame_type": "messages", "frame_fixture": "websocket_messages_frame.json"}
+    },
+    {
+      "id": "ack",
+      "request": {"client_frame_type": "ack", "frame_fixture": "websocket_ack_frame.json"},
+      "response": {"event": "delivery acknowledgement accepted"}
+    },
+    {
+      "id": "ping_pong",
+      "request": {"client_frame_type": "ping"},
+      "response": {"server_frame_type": "pong", "frame_fixture": "websocket_pong_frame.json"}
+    },
+    {
+      "id": "error",
+      "request": {"event": "protocol or delivery error"},
+      "response": {"server_frame_type": "error", "frame_fixture": "websocket_error_frame.json", "error_code": "hook_already_connected"}
+    },
+    {
+      "id": "replacement",
+      "request": {"event": "new connection for an already connected hook"},
+      "response": {"event": "old connection is replaced", "close_code": 1000, "retry_safe": true}
+    }
+  ]
+}

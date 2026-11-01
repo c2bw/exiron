@@ -1,0 +1,44 @@
+version: "2"
+
+# Telegram bots and the chat aliases each bot can access.
+telegram:
+  bots:
+    - name: assistant-bot
+      token: "123:telegram-token"
+      chats:
+        family: -1001234567890
+        notifications: 123456789
+
+# Enable middleware groups for each chat alias.
+routes:
+  family:
+    middleware:
+      - shared
+    push: true
+    default_bot: assistant-bot
+  notifications:
+    middleware:
+      - alerts
+
+# Map command prefixes to Exiron clients.
+middlewares:
+  shared:
+    routes:
+      assistant:
+        messages:
+          - /ask
+        passthrough: true
+      status:
+        messages:
+          - /status
+  alerts:
+    routes:
+      status:
+        messages:
+          - /status
+
+# SHA-256 digests of authentication tokens used by Exiron clients.
+# Set or rotate tokens from the /config UI to hash them automatically.
+hooks:
+  assistant: "sha256:c8f5dca50119f41050920cfc2cd09f2657559dc35e0573ce968fee7af63491a9"
+  status: "sha256:a71e7584942f95668f4ecdf04194476cd163efd2799dac8f02cd5f7332f19129"

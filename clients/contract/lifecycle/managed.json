@@ -1,0 +1,356 @@
+{
+  "scenario_version": "1",
+  "id": "managed_client_lifecycle",
+  "message": {
+    "msgtype": "request",
+    "req_id": "req-1",
+    "service_id": 222,
+    "chat_id": 123,
+    "datatype": "text",
+    "data": "aGVsbG8="
+  },
+  "partial_text": "partial",
+  "reply_text": "done",
+  "recovery_text": "reviewed",
+  "cases": [
+    {
+      "id": "http_failure_during_drain",
+      "transport": "http",
+      "operation": "failure_during_drain",
+      "handler_timeout_ms": 0,
+      "cancellation_interval_ms": 100,
+      "steps": [
+        "await_handler",
+        "start_drain",
+        "fail_handler",
+        "await_failed_stop"
+      ],
+      "expect": {
+        "handler_calls": 1,
+        "partial_replies": 0,
+        "final_replies": 0,
+        "ack_attempts": 0,
+        "ack_commits": 0,
+        "retirements": 0,
+        "quarantined_before_recovery": 0,
+        "quarantined_after_recovery": 0,
+        "quarantined_after_restart": 0,
+        "outcome": "handler_failed",
+        "replies": [],
+        "quarantined_final": 0
+      }
+    },
+    {
+      "id": "http_connection_loss_before_ack",
+      "transport": "http",
+      "operation": "connection_loss_before_ack",
+      "handler_timeout_ms": 0,
+      "cancellation_interval_ms": 100,
+      "steps": [
+        "await_acknowledgement",
+        "drain"
+      ],
+      "expect": {
+        "handler_calls": 1,
+        "partial_replies": 0,
+        "final_replies": 1,
+        "ack_attempts": 2,
+        "ack_commits": 1,
+        "retirements": 1,
+        "quarantined_before_recovery": 0,
+        "quarantined_after_recovery": 0,
+        "quarantined_after_restart": 0,
+        "outcome": "drained",
+        "replies": [
+          {
+            "request_id": "req-1",
+            "text": "done",
+            "final": true
+          }
+        ],
+        "quarantined_final": 0
+      }
+    },
+    {
+      "id": "http_deadline_during_stream",
+      "transport": "http",
+      "operation": "deadline_during_stream",
+      "handler_timeout_ms": 750,
+      "cancellation_interval_ms": 100,
+      "steps": [
+        "await_partial",
+        "await_deadline_stop"
+      ],
+      "expect": {
+        "handler_calls": 1,
+        "partial_replies": 1,
+        "final_replies": 0,
+        "ack_attempts": 0,
+        "ack_commits": 0,
+        "retirements": 0,
+        "quarantined_before_recovery": 0,
+        "quarantined_after_recovery": 0,
+        "quarantined_after_restart": 0,
+        "outcome": "deadline_exceeded",
+        "replies": [
+          {
+            "request_id": "req-1",
+            "text": "partial",
+            "final": false
+          }
+        ],
+        "quarantined_final": 0
+      }
+    },
+    {
+      "id": "http_cancellation_during_stream",
+      "transport": "http",
+      "operation": "cancellation_during_stream",
+      "handler_timeout_ms": 0,
+      "cancellation_interval_ms": 100,
+      "steps": [
+        "await_partial",
+        "start_drain",
+        "cancel_request",
+        "await_drained_stop"
+      ],
+      "expect": {
+        "handler_calls": 1,
+        "partial_replies": 1,
+        "final_replies": 0,
+        "ack_attempts": 0,
+        "ack_commits": 0,
+        "retirements": 1,
+        "quarantined_before_recovery": 0,
+        "quarantined_after_recovery": 0,
+        "quarantined_after_restart": 0,
+        "outcome": "drained",
+        "replies": [
+          {
+            "request_id": "req-1",
+            "text": "partial",
+            "final": false
+          }
+        ],
+        "quarantined_final": 0
+      }
+    },
+    {
+      "id": "http_quarantine_recovery_restart",
+      "transport": "http",
+      "operation": "quarantine_recovery_restart",
+      "handler_timeout_ms": 0,
+      "cancellation_interval_ms": 100,
+      "steps": [
+        "await_handler",
+        "start_drain",
+        "fail_handler",
+        "await_drained_stop",
+        "check_quarantine",
+        "recover",
+        "restart",
+        "await_handler",
+        "start_drain",
+        "complete_handler",
+        "await_drained_stop"
+      ],
+      "expect": {
+        "handler_calls": 2,
+        "partial_replies": 0,
+        "final_replies": 2,
+        "ack_attempts": 0,
+        "ack_commits": 0,
+        "retirements": 2,
+        "quarantined_before_recovery": 1,
+        "quarantined_after_recovery": 0,
+        "quarantined_after_restart": 0,
+        "outcome": "recovered_and_restarted",
+        "replies": [
+          {
+            "request_id": "req-1",
+            "text": "reviewed",
+            "final": true
+          },
+          {
+            "request_id": "req-2",
+            "text": "done",
+            "final": true
+          }
+        ],
+        "quarantined_final": 0
+      }
+    },
+    {
+      "id": "websocket_failure_during_drain",
+      "transport": "websocket",
+      "operation": "failure_during_drain",
+      "handler_timeout_ms": 0,
+      "cancellation_interval_ms": 100,
+      "steps": [
+        "await_handler",
+        "start_drain",
+        "fail_handler",
+        "await_failed_stop"
+      ],
+      "expect": {
+        "handler_calls": 1,
+        "partial_replies": 0,
+        "final_replies": 0,
+        "ack_attempts": 0,
+        "ack_commits": 0,
+        "retirements": 0,
+        "quarantined_before_recovery": 0,
+        "quarantined_after_recovery": 0,
+        "quarantined_after_restart": 0,
+        "outcome": "handler_failed",
+        "replies": [],
+        "quarantined_final": 0
+      }
+    },
+    {
+      "id": "websocket_connection_loss_before_ack",
+      "transport": "websocket",
+      "operation": "connection_loss_before_ack",
+      "handler_timeout_ms": 0,
+      "cancellation_interval_ms": 100,
+      "steps": [
+        "await_acknowledgement",
+        "drain"
+      ],
+      "expect": {
+        "handler_calls": 2,
+        "partial_replies": 0,
+        "final_replies": 2,
+        "ack_attempts": 2,
+        "ack_commits": 1,
+        "retirements": 1,
+        "quarantined_before_recovery": 0,
+        "quarantined_after_recovery": 0,
+        "quarantined_after_restart": 0,
+        "outcome": "drained",
+        "replies": [
+          {
+            "request_id": "req-1",
+            "text": "done",
+            "final": true
+          },
+          {
+            "request_id": "req-1",
+            "text": "done",
+            "final": true
+          }
+        ],
+        "quarantined_final": 0
+      }
+    },
+    {
+      "id": "websocket_deadline_during_stream",
+      "transport": "websocket",
+      "operation": "deadline_during_stream",
+      "handler_timeout_ms": 750,
+      "cancellation_interval_ms": 100,
+      "steps": [
+        "await_partial",
+        "await_deadline_stop"
+      ],
+      "expect": {
+        "handler_calls": 1,
+        "partial_replies": 1,
+        "final_replies": 0,
+        "ack_attempts": 0,
+        "ack_commits": 0,
+        "retirements": 0,
+        "quarantined_before_recovery": 0,
+        "quarantined_after_recovery": 0,
+        "quarantined_after_restart": 0,
+        "outcome": "deadline_exceeded",
+        "replies": [
+          {
+            "request_id": "req-1",
+            "text": "partial",
+            "final": false
+          }
+        ],
+        "quarantined_final": 0
+      }
+    },
+    {
+      "id": "websocket_cancellation_during_stream",
+      "transport": "websocket",
+      "operation": "cancellation_during_stream",
+      "handler_timeout_ms": 0,
+      "cancellation_interval_ms": 100,
+      "steps": [
+        "await_partial",
+        "start_drain",
+        "cancel_request",
+        "await_drained_stop"
+      ],
+      "expect": {
+        "handler_calls": 1,
+        "partial_replies": 1,
+        "final_replies": 0,
+        "ack_attempts": 0,
+        "ack_commits": 0,
+        "retirements": 1,
+        "quarantined_before_recovery": 0,
+        "quarantined_after_recovery": 0,
+        "quarantined_after_restart": 0,
+        "outcome": "drained",
+        "replies": [
+          {
+            "request_id": "req-1",
+            "text": "partial",
+            "final": false
+          }
+        ],
+        "quarantined_final": 0
+      }
+    },
+    {
+      "id": "websocket_quarantine_recovery_restart",
+      "transport": "websocket",
+      "operation": "quarantine_recovery_restart",
+      "handler_timeout_ms": 0,
+      "cancellation_interval_ms": 100,
+      "steps": [
+        "await_handler",
+        "start_drain",
+        "fail_handler",
+        "await_drained_stop",
+        "check_quarantine",
+        "recover",
+        "restart",
+        "await_handler",
+        "start_drain",
+        "complete_handler",
+        "await_drained_stop"
+      ],
+      "expect": {
+        "handler_calls": 2,
+        "partial_replies": 0,
+        "final_replies": 2,
+        "ack_attempts": 0,
+        "ack_commits": 0,
+        "retirements": 2,
+        "quarantined_before_recovery": 1,
+        "quarantined_after_recovery": 0,
+        "quarantined_after_restart": 0,
+        "outcome": "recovered_and_restarted",
+        "replies": [
+          {
+            "request_id": "req-1",
+            "text": "reviewed",
+            "final": true
+          },
+          {
+            "request_id": "req-2",
+            "text": "done",
+            "final": true
+          }
+        ],
+        "quarantined_final": 0
+      }
+    }
+  ]
+}

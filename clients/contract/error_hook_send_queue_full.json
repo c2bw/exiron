@@ -1,0 +1,5 @@
+{
+  "code": "hook_send_queue_full",
+  "error": "hook send queue full",
+  "retry_after_ms": 1000
+}

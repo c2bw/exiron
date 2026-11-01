@@ -1,0 +1,27 @@
+{
+  "delivery_id": "delivery-1",
+  "requests": [
+    {
+      "msgtype": "request",
+      "req_id": "req-1",
+      "message_id": 789,
+      "reply_to_message_id": 456,
+      "from": {
+        "id": 42,
+        "is_bot": false,
+        "first_name": "Ada",
+        "last_name": "Lovelace",
+        "username": "ada",
+        "language_code": "en"
+      },
+      "service_id": 222,
+      "chat_id": 123,
+      "instance": "assistant-bot",
+      "datatype": "text",
+      "data": "L2FpIGhlbGxv",
+      "sticker_id": "sticker-id",
+      "sticker_emoji": "\ud83e\udd23",
+      "emoji_list": ["\ud83d\ude06", "\ud83e\udd23", "\ud83d\ude00", "\ud83d\ude02", "\ud83d\ude04", "\ud83d\ude03", "\ud83d\ude01"]
+    }
+  ]
+}

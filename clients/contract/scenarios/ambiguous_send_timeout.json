@@ -1,0 +1,30 @@
+{
+  "scenario_version": "1",
+  "id": "ambiguous_telegram_send_timeout",
+  "category": "telegram_delivery",
+  "transport": "http",
+  "cases": [
+    {
+      "id": "response_send_timeout",
+      "request": {"method": "POST", "path": "/api/responses", "request_fixture": "response_payload.json"},
+      "response": {
+        "status": 504,
+        "error_code": "telegram_delivery_timeout",
+        "outcome": "ambiguous",
+        "retry_safe": false,
+        "automatic_retry": false
+      }
+    },
+    {
+      "id": "push_send_timeout",
+      "request": {"method": "POST", "path": "/api/push", "request_fixture": "push_payload.json"},
+      "response": {
+        "status": 504,
+        "error_code": "telegram_delivery_timeout",
+        "outcome": "ambiguous",
+        "retry_safe": false,
+        "automatic_retry": false
+      }
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "scenario_version": "1",
+  "id": "websocket_frame_size_rejection",
+  "category": "websocket_limits",
+  "transport": "websocket",
+  "cases": [
+    {
+      "id": "reject_oversized_inbound_frame",
+      "request": {"frame_type": "messages", "payload_size": "over_limit"},
+      "response": {"event": "connection rejected", "close_code": 1009, "error_code": null, "retry_safe": false}
+    }
+  ]
+}

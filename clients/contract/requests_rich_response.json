@@ -1,0 +1,83 @@
+{
+  "delivery_id": "rich-delivery",
+  "requests": [
+    {
+      "msgtype": "request",
+      "req_id": "album-request",
+      "message_id": 789,
+      "reply_to_message_id": 456,
+      "from": {
+        "id": 42,
+        "is_bot": false,
+        "first_name": "Ada",
+        "last_name": "Lovelace",
+        "username": "ada",
+        "language_code": "en"
+      },
+      "service_id": 222,
+      "chat_id": 123,
+      "instance": "assistant-bot",
+      "datatype": "album",
+      "data": "W3siZGF0YXR5cGUiOiAiaW1hZ2UiLCAiZGF0YSI6ICJjR2h2ZEc4dGIyNWwiLCAiY2FwdGlvbiI6ICJQaG90b3MiLCAiZmlsZV9uYW1lIjogIm9uZS5qcGciLCAibWVzc2FnZV9pZCI6IDcxfSwgeyJkYXRhdHlwZSI6ICJ2aWRlbyIsICJkYXRhIjogImRtbGtaVzh0ZEhkdiIsICJmaWxlX25hbWUiOiAidHdvLm1wNCIsICJtaW1lX3R5cGUiOiAidmlkZW8vbXA0IiwgIm1lc3NhZ2VfaWQiOiA3Mn1d",
+      "sticker_id": "sticker-id",
+      "sticker_emoji": "\ud83e\udd23",
+      "emoji_list": [
+        "\ud83d\ude06",
+        "\ud83e\udd23",
+        "\ud83d\ude00",
+        "\ud83d\ude02",
+        "\ud83d\ude04",
+        "\ud83d\ude03",
+        "\ud83d\ude01"
+      ],
+      "message_thread_id": 7,
+      "media_group_id": "album-1",
+      "caption": "/ai Photos",
+      "caption_entities": [
+        {
+          "type": "bold",
+          "offset": 4,
+          "length": 6
+        }
+      ]
+    },
+    {
+      "msgtype": "request",
+      "req_id": "text-request",
+      "message_id": 789,
+      "reply_to_message_id": 456,
+      "from": {
+        "id": 42,
+        "is_bot": false,
+        "first_name": "Ada",
+        "last_name": "Lovelace",
+        "username": "ada",
+        "language_code": "en"
+      },
+      "service_id": 222,
+      "chat_id": 123,
+      "instance": "assistant-bot",
+      "datatype": "text",
+      "data": "L2FpIGhlbGxv",
+      "sticker_id": "sticker-id",
+      "sticker_emoji": "\ud83e\udd23",
+      "emoji_list": [
+        "\ud83d\ude06",
+        "\ud83e\udd23",
+        "\ud83d\ude00",
+        "\ud83d\ude02",
+        "\ud83d\ude04",
+        "\ud83d\ude03",
+        "\ud83d\ude01"
+      ],
+      "message_thread_id": 7,
+      "entities": [
+        {
+          "type": "bot_command",
+          "offset": 0,
+          "length": 3
+        }
+      ]
+    }
+  ]
+}

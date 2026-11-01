@@ -1,0 +1,20 @@
+services:
+  prometheus:
+    image: prom/prometheus:v3.13.5
+    # Local Linux setup: scrape the host's loopback-only Phoenix listener.
+    network_mode: host
+    command:
+      - --config.file=/etc/prometheus/prometheus.yml
+      - --storage.tsdb.path=/prometheus
+      - --storage.tsdb.retention.time=15d
+      - --storage.tsdb.retention.size=2GB
+      - --web.listen-address=127.0.0.1:9090
+    volumes:
+      - ${PROMETHEUS_CONFIG:-./prometheus.yml}:/etc/prometheus/prometheus.yml:ro
+      - ./rules.yml:/etc/prometheus/rules.yml:ro
+      - ${EXIRON_METRICS_TOKEN_FILE:-./secrets/metrics_token}:/etc/prometheus/metrics_token:ro
+      - prometheus_data:/prometheus
+    restart: unless-stopped
+
+volumes:
+  prometheus_data:

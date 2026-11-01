@@ -1,0 +1,98 @@
+#!/bin/sh
+# Release overlay: copied beside bin/exiron by mix release.
+set -eu
+
+usage() {
+  cat <<'EOF'
+Usage: bin/exiron-safe-restart [--timeout SECONDS] [--startup-timeout SECONDS] [--drain-only]
+
+Pause intake and wait for accepted work before restarting the running release.
+Timeout: 1–3600 seconds (default 60). Failure leaves the VM running and intake
+paused. --drain-only waits successfully without restarting, for service managers.
+Startup timeout: 1–3600 seconds (default 60), separate from the drain timeout.
+Normal restart succeeds only after a new application boot reports ready.
+Requires timeout (GNU coreutils or BusyBox, with -k) for bounded RPC probes.
+Uses the adjacent bin/exiron and its normal release RPC environment/cookie.
+EOF
+}
+
+timeout=60
+startup_timeout=60
+drain_only=false
+while [ "$#" -gt 0 ]; do
+  case "$1" in
+    --timeout)
+      if [ "$#" -lt 2 ]; then usage >&2; exit 2; fi
+      timeout=$2
+      shift 2
+      ;;
+    --startup-timeout)
+      if [ "$#" -lt 2 ]; then usage >&2; exit 2; fi
+      startup_timeout=$2
+      shift 2
+      ;;
+    --drain-only) drain_only=true; shift ;;
+    -h|--help) usage; exit 0 ;;
+    *) usage >&2; exit 2 ;;
+  esac
+done
+
+# Only canonical decimal integers can enter the RPC expression.
+for seconds in "$timeout" "$startup_timeout"; do
+  case "$seconds" in
+    ''|*[!0-9]*|0*) usage >&2; exit 2 ;;
+  esac
+  if [ "${#seconds}" -gt 4 ] || [ "$seconds" -gt 3600 ]; then
+    usage >&2
+    exit 2
+  fi
+done
+
+release_dir=$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)
+release="$release_dir/exiron"
+if [ ! -x "$release" ]; then
+  echo 'Adjacent bin/exiron is missing or not executable.' >&2
+  exit 1
+fi
+
+trap 'echo "Maintenance interrupted; inspect runtime and drain status." >&2; exit 130' INT
+trap 'echo "Maintenance interrupted; inspect runtime and drain status." >&2; exit 143' TERM HUP
+
+if [ "$drain_only" = false ]; then
+  if ! command -v timeout >/dev/null 2>&1 || ! timeout -k 1 1 true; then
+    echo 'Restart verification requires timeout with -k support; drain not started.' >&2
+    exit 1
+  fi
+  if ! previous_boot=$(timeout -k 1 5 "$release" rpc 'IO.puts(Exiron.ReleaseMaintenance.boot_id())'); then
+    echo 'Cannot read application boot identity; drain not started.' >&2
+    exit 1
+  fi
+  case "$previous_boot" in
+    ''|*[!0-9a-f]*) echo 'Invalid boot identity; drain not started.' >&2; exit 1 ;;
+  esac
+  if [ "${#previous_boot}" -ne 32 ]; then
+    echo 'Missing boot identity; drain not started.' >&2
+    exit 1
+  fi
+fi
+
+# A failed match raises through release RPC and gives a nonzero exit status.
+# Keep restart in this shell: a disconnected/cancelled waiter cannot restart later.
+if ! "$release" rpc ":ok = Exiron.ReleaseMaintenance.drain(timeout_ms: ${timeout}000)"; then
+  echo 'Drain failed; restart skipped. Inspect drain status; intake may remain paused.' >&2
+  exit 1
+fi
+
+if [ "$drain_only" = true ]; then
+  echo 'Drained. Intake remains paused; no restart requested.'
+else
+  echo 'Drained. Requesting release restart.'
+  if timeout -k 1 5 "$release" restart; then
+    echo 'Restart requested. Waiting for a new boot and readiness.'
+  else
+    result=$?
+    echo 'Release restart command failed; inspect the runtime before retrying.' >&2
+    exit "$result"
+  fi
+  exec "$release" eval "case Exiron.ReleaseMaintenance.await_restart(\"$previous_boot\", timeout_ms: ${startup_timeout}000) do :ok -> IO.puts(\"Restart complete: new application boot is ready.\"); {:error, reason} -> IO.puts(:stderr, \"Restart verification failed: #{inspect(reason)}. Inspect service logs; no rollback was attempted.\"); System.halt(3) end"
+fi

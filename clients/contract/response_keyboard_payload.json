@@ -1,0 +1,17 @@
+{
+  "req_id": "req-1",
+  "datatype": "text",
+  "data": "Q2hvb3Nl",
+  "inline_keyboard": [
+    [
+      {
+        "text": "Next",
+        "callback_data": "next:2"
+      },
+      {
+        "text": "Help",
+        "url": "https://example.com/help"
+      }
+    ]
+  ]
+}

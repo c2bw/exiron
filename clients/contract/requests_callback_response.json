@@ -1,0 +1,40 @@
+{
+  "delivery_id": "callback-delivery",
+  "requests": [
+    {
+      "msgtype": "request",
+      "req_id": "callback-request",
+      "message_id": 901,
+      "reply_to_message_id": 456,
+      "from": {
+        "id": 42,
+        "is_bot": false,
+        "first_name": "Ada",
+        "last_name": "Lovelace",
+        "username": "ada",
+        "language_code": "en"
+      },
+      "service_id": 222,
+      "chat_id": 123,
+      "instance": "assistant-bot",
+      "datatype": "callback",
+      "data": "bmV4dDoy",
+      "sticker_id": "sticker-id",
+      "sticker_emoji": "\ud83e\udd23",
+      "emoji_list": [
+        "\ud83d\ude06",
+        "\ud83e\udd23",
+        "\ud83d\ude00",
+        "\ud83d\ude02",
+        "\ud83d\ude04",
+        "\ud83d\ude03",
+        "\ud83d\ude01"
+      ],
+      "message_thread_id": 7,
+      "callback_query": {
+        "id": "query-1",
+        "origin_req_id": "req-1"
+      }
+    }
+  ]
+}

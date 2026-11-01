@@ -1,0 +1,9 @@
+{
+  "req_id": "req-1",
+  "client_id": "worker",
+  "delivery_id": "delivery-1",
+  "attempt": 1,
+  "max_attempts": 3,
+  "state": "retrying",
+  "category": "handler_error"
+}

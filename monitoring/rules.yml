@@ -1,0 +1,98 @@
+groups:
+  - name: exiron
+    rules:
+      - record: exiron:response_p95_seconds:5m
+        expr: histogram_quantile(0.95, sum by (job, instance, le) (rate(exiron_response_duration_seconds_bucket[5m])))
+      - record: exiron:response_p99_seconds:5m
+        expr: histogram_quantile(0.99, sum by (job, instance, le) (rate(exiron_response_duration_seconds_bucket[5m])))
+      - alert: ExironScrapeUnavailable
+        expr: up{job="exiron"} == 0
+        for: 2m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Exiron metrics scrape is unavailable"
+      - alert: ExironHubUnavailable
+        expr: exiron_hub_snapshot_available == 0 or exiron_metrics_collector_up == 0
+        for: 2m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Exiron Hub or histogram collector is unavailable"
+      - alert: ExironOfflineRejections
+        expr: increase(exiron_hook_unavailable_rejections_total[5m]) > 0
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Hook {{ $labels.hook }} is rejecting new work while unavailable"
+      - alert: ExironAdmissionOverload
+        expr: increase(exiron_hook_overload_rejections_total[5m]) > 0
+        for: 2m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Hook {{ $labels.hook }} is rejecting work at admission limits"
+      - alert: ExironPendingPressure
+        expr: exiron_pending_requests / exiron_pending_limit > 0.8
+        for: 10m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Exiron pending requests exceed 80% of the configured limit"
+      - alert: ExironPayloadPressure
+        expr: exiron_hook_buffered_bytes / exiron_hook_buffered_bytes_limit > 0.8
+        for: 10m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Hook {{ $labels.hook }} buffered payload exceeds 80% of its limit"
+      - alert: ExironGlobalBufferPressure
+        expr: exiron_buffered_bytes / exiron_buffered_bytes_limit > 0.8
+        for: 10m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Exiron shared buffered payload exceeds 80% of its limit"
+      - alert: ExironGlobalBufferRejections
+        expr: increase(exiron_buffer_request_rejections_total[5m]) > 0
+        for: 2m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Exiron is rejecting new requests at its shared payload limit"
+      - alert: ExironSendBytePressure
+        expr: exiron_in_flight_send_bytes / exiron_in_flight_send_bytes_limit > 0.8
+        for: 10m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Exiron active send payload exceeds 80% of its global limit"
+      - alert: ExironSendByteRejections
+        expr: increase(exiron_send_byte_capacity_rejections_total[5m]) > 0
+        for: 2m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Exiron is rejecting sends with byte capacity exhausted"
+      - alert: ExironTelegramSuppressedAttempts
+        expr: increase(exiron_telegram_suppressed_attempts_total[5m]) > 0
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Telegram send attempts are being suppressed after definitive rejections"
+      - alert: ExironSlowResponses
+        expr: (exiron:response_p95_seconds:5m > 0.5 or exiron:response_p99_seconds:5m > 1) and on (job, instance) (increase(exiron_response_duration_seconds_count[5m]) >= 100)
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Response latency exceeds provisional 24-hook workload targets"
+      - alert: ExironSendFailureRate
+        expr: (sum by (job, instance) (rate(exiron_send_duration_seconds_count{outcome!="ok"}[5m])) / sum by (job, instance) (rate(exiron_send_duration_seconds_count[5m])) > 0.05) and on (job, instance) (sum by (job, instance) (increase(exiron_send_duration_seconds_count[5m])) >= 100)
+        for: 10m
+        labels:
+          severity: warning
+        annotations:
+          summary: "More than 5% of timed send attempts are failing; retries may recover them"

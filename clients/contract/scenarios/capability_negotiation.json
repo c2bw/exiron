@@ -1,0 +1,18 @@
+{
+  "scenario_version": "1",
+  "id": "protocol_capability_negotiation",
+  "category": "capabilities",
+  "transport": "http",
+  "cases": [
+    {
+      "id": "auth_advertises_protocol",
+      "request": {"method": "POST", "path": "/api/auth", "capability": "http_auth"},
+      "response": {"status": 200, "response_fixture": "auth_response.json", "protocol_version": "manifest", "capabilities": "manifest"}
+    },
+    {
+      "id": "websocket_advertises_protocol",
+      "request": {"event": "authenticated connection", "capability": "websocket"},
+      "response": {"server_frame_type": "connected", "frame_fixture": "websocket_connected_frame.json", "protocol_version": "manifest", "capabilities": "manifest"}
+    }
+  ]
+}

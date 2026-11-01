@@ -1,0 +1,23 @@
+{
+  "scenario_version": "1",
+  "id": "response_claim_errors",
+  "category": "http_responses",
+  "transport": "http",
+  "cases": [
+    {
+      "id": "unknown_request",
+      "request": {"method": "POST", "path": "/api/responses", "request_fixture": "response_payload.json"},
+      "response": {"status": 404, "response_fixture": "error_response.json", "error_code": "request_not_found"}
+    },
+    {
+      "id": "request_owned_by_another_client",
+      "request": {"method": "POST", "path": "/api/responses", "request_fixture": "response_payload.json"},
+      "response": {"status": 409, "error_code": "request_not_assigned"}
+    },
+    {
+      "id": "request_already_in_flight",
+      "request": {"method": "POST", "path": "/api/responses", "request_fixture": "response_payload.json"},
+      "response": {"status": 409, "error_code": "request_in_flight"}
+    }
+  ]
+}

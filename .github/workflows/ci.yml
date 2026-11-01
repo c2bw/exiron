@@ -1,0 +1,123 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  release-smoke:
+    name: Isolated Linux release smoke
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      MIX_ENV: test
+    steps:
+      - uses: actions/checkout@v4
+      - uses: erlef/setup-beam@v1
+        with:
+          otp-version: '28.0'
+          elixir-version: 1.20.1
+      - run: mix deps.get
+      - name: Build and verify an isolated release
+        run: mix run --no-start scripts/release_smoke.exs
+
+  compatibility:
+    name: ${{ matrix.os }} / OTP ${{ matrix.otp }} / Elixir 1.20.1 / Go 1.24.5
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+        otp: ['27.3', '28.0']
+
+    env:
+      MIX_ENV: test
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: erlef/setup-beam@v1
+        with:
+          otp-version: ${{ matrix.otp }}
+          elixir-version: 1.20.1
+
+      - uses: actions/setup-go@v5
+        with:
+          go-version: 1.24.5
+          cache-dependency-path: clients/go/go.sum
+
+      - name: Cache Mix artifacts
+        uses: actions/cache@v4
+        with:
+          path: |
+            deps
+            _build
+            clients/elixir/deps
+            clients/elixir/_build
+          key: ${{ runner.os }}-otp-${{ matrix.otp }}-mix-${{ hashFiles('mix.lock', 'clients/elixir/mix.lock') }}
+
+      - name: Install server dependencies
+        run: mix deps.get
+
+      - name: Install Elixir SDK dependencies
+        working-directory: clients/elixir
+        run: mix deps.get
+
+      - name: Run complete quality gate
+        run: mix precommit
+
+  docker:
+    name: Build and publish Docker image
+    needs: [release-smoke, compatibility]
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    permissions:
+      contents: read
+      packages: write
+    concurrency:
+      group: docker-main-${{ github.repository }}
+      cancel-in-progress: true
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Log in to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Docker metadata
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ghcr.io/${{ github.repository }}
+          tags: |
+            type=raw,value=latest
+            type=sha,prefix=sha-,format=long
+
+      - name: Build and push
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          platforms: linux/amd64,linux/arm64
+          build-args: |
+            EXIRON_BUILD_COMMIT=${{ github.sha }}
+            EXIRON_BUILD_DIRTY=false
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          cache-from: type=gha,scope=exiron-main
+          cache-to: type=gha,scope=exiron-main,mode=max

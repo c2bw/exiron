@@ -1,0 +1,12 @@
+{
+  "client_id": "worker",
+  "runtime_ref": "runtime-session-1",
+  "sequence": 1,
+  "phase": "handling",
+  "active_handlers": 2,
+  "overdue_handlers": 1,
+  "quarantined_messages": 3,
+  "quarantine_bytes": 1024,
+  "quarantine_enabled": true,
+  "quarantine_available": true
+}

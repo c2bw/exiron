@@ -1,0 +1,31 @@
+{
+  "scenario_version": "1",
+  "id": "http_poll_delivery_acknowledgement",
+  "category": "http_polling",
+  "transport": "http",
+  "cases": [
+    {
+      "id": "deliver_pending_requests",
+      "request": {"method": "GET", "path": "/api/requests", "capability": "http_polling"},
+      "response": {
+        "status": 200,
+        "response_fixture": "requests_response.json",
+        "assertions": ["delivery_id identifies the returned batch", "messages are not acknowledged yet"]
+      }
+    },
+    {
+      "id": "retain_until_acknowledged",
+      "request": {"method": "GET", "path": "/api/requests"},
+      "response": {
+        "status": 200,
+        "response_fixture": "requests_response.json",
+        "assertions": ["the unacknowledged delivery_id remains claimable", "the same batch is not silently acknowledged"]
+      }
+    },
+    {
+      "id": "acknowledge_delivery",
+      "request": {"method": "POST", "path": "/api/requests/ack", "capability": "http_delivery_ack"},
+      "response": {"status": 200, "response_fixture": "ok_response.json", "assertions": ["the delivery is released after acknowledgement"]}
+    }
+  ]
+}

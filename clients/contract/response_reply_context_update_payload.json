@@ -1,0 +1,8 @@
+{
+  "req_id": "req-1",
+  "datatype": "text",
+  "data": "cGFydGlhbA==",
+  "final": false,
+  "parse_mode": "plain",
+  "reply_to_original": true
+}

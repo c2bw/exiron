@@ -1,0 +1,116 @@
+.ex-monitor-hero {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  border: 1px solid color-mix(in oklab, var(--color-primary) 22%, #12231c);
+  border-radius: 1.35rem;
+  background:
+    radial-gradient(circle at 86% 18%, rgba(52, 211, 153, 0.16), transparent 20rem),
+    radial-gradient(circle at 14% 120%, rgba(45, 212, 191, 0.1), transparent 24rem),
+    linear-gradient(135deg, #172721 0%, #101b18 58%, #0b1411 100%);
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.07) inset,
+    0 28px 70px -46px rgba(7, 25, 19, 0.9);
+}
+
+.ex-monitor-hero::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  opacity: 0.14;
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.08) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.08) 1px, transparent 1px);
+  background-size: 42px 42px;
+  mask-image: linear-gradient(100deg, black, transparent 72%);
+}
+
+.ex-monitor-stat {
+  display: flex;
+  min-width: 0;
+  align-items: center;
+  gap: 0.65rem;
+  min-height: 4.75rem;
+  padding: 0.75rem 1rem;
+  border-right: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.ex-monitor-stat:last-child {
+  border-right: 0;
+}
+
+.ex-monitor-chat-card {
+  position: relative;
+  min-width: 0;
+  padding: 0.7rem 0.8rem;
+  background: color-mix(in oklab, var(--color-base-100) 98%, transparent);
+  transition:
+    background-color 160ms ease,
+    box-shadow 160ms ease,
+    transform 160ms ease;
+}
+
+.ex-monitor-chat-card::before {
+  content: "";
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 2px;
+  background: var(--color-primary);
+  opacity: 0;
+  transition: opacity 160ms ease;
+}
+
+.ex-monitor-chat-card:hover {
+  z-index: 1;
+  background: color-mix(in oklab, var(--color-primary) 3.5%, var(--color-base-100));
+  box-shadow: 0 16px 36px -28px color-mix(in oklab, var(--color-primary) 55%, transparent);
+}
+
+.ex-monitor-chat-card:hover::before {
+  opacity: 0.75;
+}
+
+.ex-monitor-event-row {
+  display: flex;
+  gap: 0.8rem;
+  padding: 1rem;
+  border-bottom: 1px solid color-mix(in oklab, var(--color-base-300) 82%, transparent);
+  transition: background-color 150ms ease;
+}
+
+.ex-monitor-event-row:last-child {
+  border-bottom: 0;
+}
+
+.ex-monitor-event-row:hover {
+  background: color-mix(in oklab, var(--color-primary) 3.5%, var(--color-base-100));
+}
+
+.ex-monitor-event-icon {
+  display: grid;
+  width: 2rem;
+  height: 2rem;
+  flex: none;
+  place-items: center;
+  border-radius: 0.65rem;
+}
+
+@media (max-width: 639px) {
+  .ex-monitor-stat {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.45rem;
+    padding: 0.75rem;
+  }
+}
+
+@media (max-width: 1023px) {
+  .ex-monitor-stat:nth-child(2n) {
+    border-right: 0;
+  }
+
+  .ex-monitor-stat:nth-child(-n + 2) {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  }
+}

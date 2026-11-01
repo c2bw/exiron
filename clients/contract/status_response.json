@@ -1,0 +1,124 @@
+{
+  "enabled": true,
+  "telegram_polling": true,
+  "telegram_last_polled_at": "2026-07-06T18:00:00Z",
+  "version": "0.1.0",
+  "requested": 1,
+  "chats": [
+    {
+      "id": 123,
+      "aliases": ["home"],
+      "default_bot": "assistant-bot",
+      "current_bot": "assistant-bot",
+      "bot_memberships": [
+        {
+          "chat_id": 123,
+          "bot_name": "assistant-bot",
+          "bot_user_id": 42,
+          "status": "member",
+          "present": true
+        }
+      ],
+      "polling": true,
+      "last_polled_at": "2026-07-06T18:00:00Z"
+    }
+  ],
+  "hooks": [
+    {
+      "name": "assistant",
+      "connected": true,
+      "listening": true,
+      "queued": 0
+    }
+  ],
+  "routes": [
+    {
+      "id": 7,
+      "service_id": 222,
+      "chat_id": 123,
+      "chat_alias": "home",
+      "to": "assistant",
+      "messages": ["/ai"],
+      "push": true,
+      "default_bot": "assistant-bot"
+    }
+  ],
+  "events": [
+    {
+      "id": "event-1",
+      "at": "2026-07-06T18:00:01Z",
+      "direction": "incoming",
+      "target": "telegram",
+      "kind": "received",
+      "service_id": 222,
+      "chat_id": 123,
+      "bot_name": "assistant-bot",
+      "datatype": "text",
+      "preview": "/ai hello",
+      "hook": null,
+      "image_src": null,
+      "sticker_id": null,
+      "sticker_emoji": null,
+      "emoji_list": [],
+      "message_id": 789,
+      "reply_to_message_id": 456
+    }
+  ],
+  "send_failures": [
+    {
+      "id": "send-failure-1",
+      "at": "2026-07-06T18:00:04Z",
+      "operation": "reply",
+      "hook": "assistant",
+      "chat_id": 123,
+      "bot_name": "assistant-bot",
+      "datatype": "text",
+      "preview": "reply text",
+      "reason": ":telegram_delivery_timeout"
+    }
+  ],
+  "overload_events": [
+    {
+      "id": "overload-event-1",
+      "at": "2026-07-06T18:00:03Z",
+      "hook": "assistant",
+      "reason": "max_queue_per_hook",
+      "service_id": 222,
+      "chat_id": 123,
+      "datatype": "text",
+      "payload_bytes": 9
+    }
+  ],
+  "membership_events": [
+    {
+      "id": "membership-event-1",
+      "at": "2026-07-06T18:00:05Z",
+      "action": "added",
+      "chat_id": 123,
+      "chat_title": "Home",
+      "bot_name": "assistant-bot",
+      "bot_user_id": 42,
+      "old_status": "left",
+      "new_status": "member"
+    }
+  ],
+  "bot_memberships": [
+    {
+      "chat_id": 123,
+      "bot_name": "assistant-bot",
+      "bot_user_id": 42,
+      "status": "member",
+      "present": true
+    }
+  ],
+  "client_events": [
+    {
+      "id": "client-event-1",
+      "at": "2026-07-06T18:00:02Z",
+      "action": "connected",
+      "hook": "assistant",
+      "client_id": "runner",
+      "listening": true
+    }
+  ]
+}
