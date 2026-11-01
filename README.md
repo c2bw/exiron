@@ -361,8 +361,8 @@ mix precommit
 `mix precommit` checks formatting, compilation warnings, version and protocol
 consistency, contract fixtures, benchmark smoke workloads, server tests, and
 both SDK test suites. It also runs Go formatting checks and `go vet`.
-The [CI workflow](.github/workflows/ci.yml) runs the complete gate on Linux and
-Windows and builds an isolated Linux test release.
+The [CI workflow](.github/workflows/ci.yml) runs the complete gate on Linux with
+OTP 27.3 and 28.0 and builds an isolated Linux test release.
 
 For an isolated release smoke test:
 

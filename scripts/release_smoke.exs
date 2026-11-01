@@ -73,7 +73,9 @@ defmodule Exiron.ReleaseSmoke do
       ])
 
     try do
-      wait_ready(release, env, System.monotonic_time(:millisecond) + 30_000)
+      # Cold boots and OTP restarts can take tens of seconds on CI runners.
+      # Match the release helper's normal startup allowance.
+      wait_ready(port, release, env, System.monotonic_time(:millisecond) + 90_000)
 
       assert!(
         rpc(release, "IO.puts(Exiron.BuildInfo.current().metadata_status)", env) == "available",
@@ -94,7 +96,7 @@ defmodule Exiron.ReleaseSmoke do
       )
 
       rpc(release, "Exiron.Hub.resume_intake()", env)
-      output = command(helper, ["--timeout", "3", "--startup-timeout", "15"], env, 0)
+      output = command(helper, ["--timeout", "3", "--startup-timeout", "90"], env, 0, 110)
 
       assert!(
         String.contains?(output, "new application boot is ready"),
@@ -107,7 +109,7 @@ defmodule Exiron.ReleaseSmoke do
       )
 
       File.write!(config_path, "version: \"unsupported\"\n")
-      output = command(helper, ["--timeout", "3", "--startup-timeout", "15"], env, 3)
+      output = command(helper, ["--timeout", "3", "--startup-timeout", "90"], env, 3, 110)
       assert!(String.contains?(output, "boot_failed"), "startup failure was not classified")
       failed_boot = rpc(release, "IO.puts(Exiron.ReleaseMaintenance.boot_id())", env)
       {_, status} = raw_command(helper, ["--timeout", "1", "--drain-only"], env, 10)
@@ -117,27 +119,52 @@ defmodule Exiron.ReleaseSmoke do
         rpc(release, "IO.puts(Exiron.ReleaseMaintenance.boot_id())", env) == failed_boot,
         "failed drain restarted the instance"
       )
+    rescue
+      error ->
+        {output, status} =
+          raw_command(release, ["rpc", "IO.inspect(Exiron.Hub.readiness())"], env, 5)
+
+        IO.puts(:stderr, "Readiness RPC exited #{status}: #{output}")
+        IO.puts(:stderr, "Release output:\n#{startup_logs(port, "")}")
+        reraise error, __STACKTRACE__
     after
       stop(port, release, env)
     end
   end
 
-  defp wait_ready(release, env, deadline) do
+  defp wait_ready(port, release, env, deadline, logs \\ "") do
     {output, status} =
       raw_command(release, ["rpc", "IO.puts(Exiron.Hub.readiness().ready)"], env, 5)
+
+    logs = startup_logs(port, logs)
 
     cond do
       status == 0 and String.trim(output) == "true" ->
         :ok
 
       System.monotonic_time(:millisecond) >= deadline ->
-        raise "isolated release did not become ready"
+        raise "isolated release did not become ready; last RPC exited #{status}: #{output}\nRelease output:\n#{logs}"
 
       true ->
         receive do
         after
-          100 -> wait_ready(release, env, deadline)
+          100 -> wait_ready(port, release, env, deadline, logs)
         end
+    end
+  end
+
+  defp startup_logs(port, logs) do
+    receive do
+      {^port, {:data, data}} ->
+        logs = logs <> data
+        size = byte_size(logs)
+        logs = binary_part(logs, max(0, size - 16_384), min(size, 16_384))
+        startup_logs(port, logs)
+
+      {^port, {:exit_status, status}} ->
+        logs <> "\nRelease process exited #{status}\n"
+    after
+      0 -> logs
     end
   end
 

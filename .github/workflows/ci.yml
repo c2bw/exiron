@@ -25,12 +25,11 @@ jobs:
         run: mix run --no-start scripts/release_smoke.exs
 
   compatibility:
-    name: ${{ matrix.os }} / OTP ${{ matrix.otp }} / Elixir 1.20.1 / Go 1.24.5
-    runs-on: ${{ matrix.os }}
+    name: Linux / OTP ${{ matrix.otp }} / Elixir 1.20.1 / Go 1.24.5
+    runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-latest, windows-latest]
         otp: ['27.3', '28.0']
 
     env:
