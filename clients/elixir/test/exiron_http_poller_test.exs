@@ -127,7 +127,7 @@ defmodule ExironClient.HTTPPollerTest do
         restart: :temporary
       )
 
-    assert_receive :connected
+    assert_receive :connected, @poller_assert_timeout
     assert_receive {:fatal_poll_ready, ^pid}, @poller_assert_timeout
 
     ref = Process.monitor(pid)
@@ -184,9 +184,9 @@ defmodule ExironClient.HTTPPollerTest do
        on_disconnect: fn reason -> send(parent, {:disconnected, reason}) end}
     )
 
-    assert_receive :connected
-    assert_receive {:disconnected, %Error{reason: :transport_error}}
-    assert_receive :connected
+    assert_receive :connected, @poller_assert_timeout
+    assert_receive {:disconnected, %Error{reason: :transport_error}}, @poller_assert_timeout
+    assert_receive :connected, @poller_assert_timeout
 
     assert length(recorded_requests(requests)) >= 3
   end
@@ -235,8 +235,8 @@ defmodule ExironClient.HTTPPollerTest do
        on_disconnect: fn reason -> send(parent, {:disconnected, reason}) end}
     )
 
-    assert_receive :connected
-    assert_receive {:disconnected, %Error{reason: :transport_error}}
+    assert_receive :connected, @poller_assert_timeout
+    assert_receive {:disconnected, %Error{reason: :transport_error}}, @poller_assert_timeout
 
     assert Agent.get(sleeps, &Enum.reverse/1) |> Enum.take(2) == [250, 500]
   end
@@ -259,8 +259,8 @@ defmodule ExironClient.HTTPPollerTest do
       )
 
     ref = Process.monitor(pid)
-    assert_receive :connected
-    assert_receive {:disconnected, :handler_failed}
+    assert_receive :connected, @poller_assert_timeout
+    assert_receive {:disconnected, :handler_failed}, @poller_assert_timeout
     assert_receive {:DOWN, ^ref, :process, ^pid, :handler_failed}, @poller_assert_timeout
   end
 
@@ -286,8 +286,8 @@ defmodule ExironClient.HTTPPollerTest do
       )
 
     ref = Process.monitor(pid)
-    assert_receive :connected
-    assert_receive {:disconnected, ^failure}
+    assert_receive :connected, @poller_assert_timeout
+    assert_receive {:disconnected, ^failure}, @poller_assert_timeout
     assert_receive {:DOWN, ^ref, :process, ^pid, ^failure}, @poller_assert_timeout
     assert length(recorded_requests(requests)) == 1
   end

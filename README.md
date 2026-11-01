@@ -60,7 +60,7 @@ See [delivery guarantees](docs/delivery-guarantees.md) for the full contract.
 ### 1. Start Exiron from source
 
 You need Git and Elixir **1.20** with a compatible Erlang/OTP installation. The
-[CI matrix](.github/workflows/ci.yml) uses Elixir 1.20.1 with OTP 27.3 and 28.0.
+[CI matrix](.github/workflows/ci.yml) uses Elixir 1.20.1 with OTP 27.3 and 28.1.
 Go **1.24.5 or newer** is needed for the Go SDK and the complete project checks.
 For a container build instead, see [Run with Docker](#run-with-docker).
 
@@ -362,7 +362,7 @@ mix precommit
 consistency, contract fixtures, benchmark smoke workloads, server tests, and
 both SDK test suites. It also runs Go formatting checks and `go vet`.
 The [CI workflow](.github/workflows/ci.yml) runs the complete gate on Linux with
-OTP 27.3 and 28.0 and builds an isolated Linux test release.
+OTP 27.3 and 28.1 and builds an isolated Linux test release.
 
 For an isolated release smoke test:
 
