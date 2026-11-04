@@ -96,7 +96,8 @@ defmodule ExironClient.ClientDrain do
 
   def request(client, id, budget) do
     try do
-      ExironClient.retire_delivery(client, id, receive_timeout: budget, pool_timeout: budget)
+      opts = [receive_timeout: budget, finch: [pool_timeout: budget, receive_timeout: budget]]
+      ExironClient.retire_delivery(client, id, opts)
     rescue
       _ -> {:error, ExironClient.Error.new(:request_error, "client retirement failed")}
     catch

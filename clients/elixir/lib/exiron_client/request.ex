@@ -16,9 +16,8 @@ defmodule ExironClient.Request do
   defp request_unobserved(client, method, path, opts) do
     opts =
       client.req_options
-      |> Keyword.merge(opts)
+      |> ExironClient.RequestOptions.merge(opts)
       |> Keyword.merge(method: method, url: client.base_url <> path)
-      |> ExironClient.RequestOptions.normalize()
       |> Keyword.put(:retry, false)
       |> Keyword.put(:into, response_collector(client.max_response_bytes))
       |> put_auth_header(client.token)

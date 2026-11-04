@@ -41,19 +41,7 @@ defmodule ExironClient.HandlerReporting do
       payload =
         if state == "recovered", do: payload, else: Map.put(payload, :category, category(error))
 
-      request_opts = [json: payload, receive_timeout: 1000, pool_timeout: 1000]
-
-      request_opts =
-        if Keyword.has_key?(client.req_options, :finch),
-          do: request_opts,
-          else:
-            Keyword.put(
-              request_opts,
-              :connect_options,
-              client.req_options
-              |> Keyword.get(:connect_options, [])
-              |> Keyword.put(:timeout, 1000)
-            )
+      request_opts = ExironClient.RequestOptions.control(client.req_options, json: payload)
 
       Request.request(client, :post, "/api/handler-reports", request_opts)
     end

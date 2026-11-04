@@ -103,10 +103,12 @@ defmodule ExironClient.HTTPLease do
     task =
       Task.async(fn ->
         try do
-          ExironClient.renew_http_lease(client, batch,
+          opts = [
             receive_timeout: timeout,
-            pool_timeout: timeout
-          )
+            finch: [pool_timeout: timeout, receive_timeout: timeout]
+          ]
+
+          ExironClient.renew_http_lease(client, batch, opts)
         rescue
           _ -> {:error, Lease.error()}
         catch

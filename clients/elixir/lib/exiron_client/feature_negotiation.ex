@@ -17,17 +17,7 @@ defmodule ExironClient.FeatureNegotiation do
     control =
       if optional? and required == [] do
         request_options =
-          Keyword.merge(control.req_options, receive_timeout: 1000, pool_timeout: 1000)
-
-        request_options =
-          if Keyword.has_key?(request_options, :finch),
-            do: request_options,
-            else:
-              Keyword.put(
-                request_options,
-                :connect_options,
-                Keyword.put(Keyword.get(request_options, :connect_options, []), :timeout, 1000)
-              )
+          ExironClient.RequestOptions.control(control.req_options, control.req_options)
 
         %{control | req_options: request_options}
       else

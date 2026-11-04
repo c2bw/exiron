@@ -1,5 +1,5 @@
 defmodule ExironClient.ClientIdentityWireTest do
-  use ExUnit.Case, async: true
+  use ExUnit.Case, async: false
 
   alias ExironClient.FixtureHelpers
 
@@ -11,8 +11,7 @@ defmodule ExironClient.ClientIdentityWireTest do
         client_id: "versioned-worker",
         req_options: [
           headers: [{"x-custom", "preserved"}, {"X-Exiron-SDK", "stale"}],
-          pool_timeout: 1000,
-          connect_options: [timeout: 1000]
+          finch: [pool_timeout: 1000, conn_opts: [transport_opts: [timeout: 1000]]]
         ]
       )
 
@@ -30,7 +29,7 @@ defmodule ExironClient.ClientIdentityWireTest do
       ExironClient.new(
         base_url: capture_server(:http),
         token: "test-token",
-        req_options: [finch: __MODULE__.Pool, pool_timeout: 1000]
+        req_options: [finch: [name: __MODULE__.Pool, pool_timeout: 1000]]
       )
 
     assert ExUnit.CaptureIO.capture_io(:stderr, fn ->

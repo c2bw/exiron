@@ -26,7 +26,7 @@ defmodule ExironClient.MixProject do
   # Run "mix help deps" to learn about dependencies.
   defp deps do
     [
-      {:req, "~> 0.5"},
+      {:req, "~> 0.7"},
       {:websockex, "~> 0.4"}
     ]
   end

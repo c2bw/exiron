@@ -157,17 +157,7 @@ defmodule ExironClient.RuntimeReporting do
   end
 
   defp report(client, payload) do
-    opts = [json: payload, receive_timeout: 1000, pool_timeout: 1000]
-    # A fixed connect option reuses one pool; named Finch pools retain their configuration.
-    opts =
-      if Keyword.has_key?(client.req_options, :finch),
-        do: opts,
-        else:
-          Keyword.put(
-            opts,
-            :connect_options,
-            Keyword.put(Keyword.get(client.req_options, :connect_options, []), :timeout, 1000)
-          )
+    opts = ExironClient.RequestOptions.control(client.req_options, json: payload)
 
     ExironClient.Request.request(client, :post, "/api/client-runtime", opts)
   rescue

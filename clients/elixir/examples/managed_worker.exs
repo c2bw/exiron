@@ -247,8 +247,7 @@ defmodule ExironExampleWorker do
           token: token,
           req_options: [
             receive_timeout: 10_000,
-            pool_timeout: 5000,
-            connect_options: [timeout: 5000]
+            finch: [pool_timeout: 5000, conn_opts: [transport_opts: [timeout: 5000]]]
           ]
         ]
 

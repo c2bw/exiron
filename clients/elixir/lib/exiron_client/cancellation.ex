@@ -143,17 +143,7 @@ defmodule ExironClient.Cancellation do
   end
 
   defp state(client, id) do
-    opts = [params: [req_id: id], receive_timeout: 1000, pool_timeout: 1000]
-
-    opts =
-      if Keyword.has_key?(client.req_options, :finch),
-        do: opts,
-        else:
-          Keyword.put(
-            opts,
-            :connect_options,
-            client.req_options |> Keyword.get(:connect_options, []) |> Keyword.put(:timeout, 1000)
-          )
+    opts = ExironClient.RequestOptions.control(client.req_options, params: [req_id: id])
 
     case Request.request(client, :get, "/api/request-state", opts) do
       {:ok, %{"req_id" => ^id, "state" => status}}

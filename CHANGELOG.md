@@ -27,7 +27,7 @@
 
 ### Go and Elixir SDKs
 
-- Avoid deprecated pool timeout options with Req 0.7 while retaining compatibility with Req 0.5/0.6, named Finch pools and handler deadlines.
+- Require Req 0.7 or later in the Elixir SDK and use nested Finch options throughout control requests, examples and handler deadlines.
 
 - Enable managed SDK runtime reporting automatically when capability discovery advertises support, with explicit opt-out options and compatibility with older servers.
 - Optional bounded concurrency, per-conversation ordering, cooperative cancellation,

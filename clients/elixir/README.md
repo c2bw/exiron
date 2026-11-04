@@ -93,7 +93,7 @@ stop polling with an `%ExironClient.Error{reason: :invalid_response}`.
 
 ## HTTP connection options
 
-With Req 0.7 and later, use nested Finch options:
+The SDK requires Req 0.7 or later (before 1.0). Use nested Finch options:
 
 ```elixir
 req_options: [
@@ -103,10 +103,10 @@ req_options: [
 ```
 
 For an existing named pool, use `finch: [name: MyFinch, pool_timeout: 5000]`.
-The SDK also accepts existing top-level `pool_timeout`, named `finch`, and
-`connect_options` settings and converts them for Req 0.7. Applications using
-Req 0.5 or 0.6 can keep their existing options. Handler deadlines continue to
-cap pool and receive timeouts without changing connection pool settings.
+When upgrading, move top-level `pool_timeout` into `finch`, change
+`finch: MyFinch` to `finch: [name: MyFinch]`, and put connection timeouts under
+`finch: [conn_opts: [transport_opts: [timeout: ...]]]`. Handler deadlines cap
+pool and receive timeouts without changing connection pool settings.
 
 ## Managed polling
 
