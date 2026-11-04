@@ -9,7 +9,11 @@ defmodule ExironClient.ClientIdentityWireTest do
         base_url: capture_server(:http),
         token: "test-token",
         client_id: "versioned-worker",
-        req_options: [headers: [{"x-custom", "preserved"}, {"X-Exiron-SDK", "stale"}]]
+        req_options: [
+          headers: [{"x-custom", "preserved"}, {"X-Exiron-SDK", "stale"}],
+          pool_timeout: 1000,
+          connect_options: [timeout: 1000]
+        ]
       )
 
     assert {:ok, []} = ExironClient.requests(client)
@@ -17,6 +21,24 @@ defmodule ExironClient.ClientIdentityWireTest do
     assert_identity(headers)
     assert headers["authorization"] == ["Bearer test-token"]
     assert headers["x-custom"] == ["preserved"]
+  end
+
+  test "real HTTP requests retain a named Finch pool with bounded pool checkout" do
+    start_supervised!({Finch, name: __MODULE__.Pool})
+
+    client =
+      ExironClient.new(
+        base_url: capture_server(:http),
+        token: "test-token",
+        req_options: [finch: __MODULE__.Pool, pool_timeout: 1000]
+      )
+
+    assert ExUnit.CaptureIO.capture_io(:stderr, fn ->
+             assert {:ok, []} = ExironClient.requests(client)
+           end) == ""
+
+    assert_receive {:wire_headers, headers}, 1000
+    assert_identity(headers)
   end
 
   test "the default managed WebSocket transport puts SDK identity on the wire" do

@@ -347,12 +347,25 @@ defmodule ExironClient.HandlerDeadlineTest do
       batch_task([handler_timeout_ms: 150], fn _ -> ExironClient.status(client) end)
       assert_receive {:request_options, opts}, 1000
       assert opts[:receive_timeout] <= 150
-      assert opts[:pool_timeout] <= 150
+
+      if ExironClient.RequestOptions.nested_finch?() do
+        assert opts[:finch][:pool_timeout] <= 150
+        refute Map.has_key?(opts, :pool_timeout)
+
+        if @finch do
+          assert opts[:finch][:name] == :unused_custom_pool
+        else
+          assert opts[:finch][:conn_opts][:transport_opts][:timeout] == 321
+        end
+      else
+        assert opts[:pool_timeout] <= 150
+      end
 
       if @finch do
         refute Keyword.has_key?(opts[:connect_options] || [], :timeout)
       else
-        assert opts[:connect_options][:timeout] == 321
+        unless ExironClient.RequestOptions.nested_finch?(),
+          do: assert(opts[:connect_options][:timeout] == 321)
       end
 
       assert_receive {:batch_result, {:error, %Error{reason: :handler_deadline_exceeded}}, _},

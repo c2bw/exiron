@@ -18,6 +18,7 @@ defmodule ExironClient.Request do
       client.req_options
       |> Keyword.merge(opts)
       |> Keyword.merge(method: method, url: client.base_url <> path)
+      |> ExironClient.RequestOptions.normalize()
       |> Keyword.put(:retry, false)
       |> Keyword.put(:into, response_collector(client.max_response_bytes))
       |> put_auth_header(client.token)

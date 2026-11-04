@@ -160,7 +160,21 @@ defmodule ExironClient.HandlerDeadline do
 
         remaining ->
           budget = max(remaining, 1)
-          opts = opts |> cap(:receive_timeout, budget) |> cap(:pool_timeout, budget)
+          opts = opts |> ExironClient.RequestOptions.normalize() |> cap(:receive_timeout, budget)
+
+          opts =
+            if ExironClient.RequestOptions.nested_finch?() do
+              finch = opts |> Keyword.get(:finch, []) |> cap(:pool_timeout, budget)
+
+              finch =
+                if Keyword.has_key?(finch, :receive_timeout),
+                  do: cap(finch, :receive_timeout, budget),
+                  else: finch
+
+              Keyword.put(opts, :finch, finch)
+            else
+              cap(opts, :pool_timeout, budget)
+            end
 
           # Connection settings identify Req's reusable Finch pools. A shrinking
           # per-request timeout here would create a pool for each budget value.

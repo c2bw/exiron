@@ -91,6 +91,23 @@ Set `max_response_bytes: byte_limit` in `ExironClient.new/1` when an
 installation needs a different explicit limit. Oversized responses return or
 stop polling with an `%ExironClient.Error{reason: :invalid_response}`.
 
+## HTTP connection options
+
+With Req 0.7 and later, use nested Finch options:
+
+```elixir
+req_options: [
+  receive_timeout: 10_000,
+  finch: [pool_timeout: 5000, conn_opts: [transport_opts: [timeout: 5000]]]
+]
+```
+
+For an existing named pool, use `finch: [name: MyFinch, pool_timeout: 5000]`.
+The SDK also accepts existing top-level `pool_timeout`, named `finch`, and
+`connect_options` settings and converts them for Req 0.7. Applications using
+Req 0.5 or 0.6 can keep their existing options. Handler deadlines continue to
+cap pool and receive timeouts without changing connection pool settings.
+
 ## Managed polling
 
 The managed `ExironClient.Poller` uses a raw JSON websocket by default,
