@@ -80,7 +80,7 @@ defmodule ExironWeb.ExironControllerContractTest do
       schemas |> Map.fetch!("ResponsePayload") |> Map.fetch!("properties")
 
     assert Map.keys(response_payload_properties) |> Enum.sort() ==
-             ~w(caption caption_entities caption_overflow data datatype edit_origin entities file_name final inline_keyboard media_group_id message_thread_id mime_type parse_mode reply_to_original req_id sticker_emoji)
+             ~w(caption caption_entities caption_overflow data datatype delivery_receipts edit_origin entities file_name final inline_keyboard media_group_id message_thread_id mime_type parse_mode reply_to_original req_id sticker_emoji)
 
     assert documented_response_codes(paths, "/api/requests", "get") == [
              "200",

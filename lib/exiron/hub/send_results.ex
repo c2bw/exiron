@@ -31,7 +31,7 @@ defmodule Exiron.Hub.SendResults do
 
       :push ->
         Transition.new(state,
-          effects: [reply_push(command.from, {:error, :telegram_delivery_timeout})]
+          effects: [reply_push(command, {:error, :telegram_delivery_timeout})]
         )
 
       kind when kind in [:unavailable, :overloaded, :interaction] ->
@@ -74,14 +74,14 @@ defmodule Exiron.Hub.SendResults do
 
       {:push, :ok} ->
         record_push_send(state, command.hook, result.value || [], [
-          reply_push(command.from, {:ok, result.value || []})
+          reply_push(command, {:ok, result.value || []})
         ])
 
       {:push, :partial_error} ->
         complete_partial_push(state, command, result.reason, result.messages, result.failures)
 
       {:push, :error} ->
-        Transition.new(state, effects: [reply_push(command.from, {:error, result.reason})])
+        Transition.new(state, effects: [reply_push(command, {:error, result.reason})])
 
       {kind, :ok} when kind in [:unavailable, :overloaded, :interaction] ->
         record_background_send(state, command, result.value || command.message)
@@ -174,7 +174,7 @@ defmodule Exiron.Hub.SendResults do
           effects: [
             Effect.reply(
               command.from,
-              {:ok, update_receipt(sent_message)}
+              {:ok, maybe_receipts(update_receipt(sent_message), command, sent_message)}
             ),
             Effect.broadcast_status()
           ]
@@ -193,7 +193,7 @@ defmodule Exiron.Hub.SendResults do
     Transition.new(next_state,
       effects: [
         Effect.cancel_timer(timer(command.pending)),
-        Effect.reply(command.from, :ok),
+        Effect.reply(command.from, response_receipt(command, sent_message)),
         Effect.broadcast_status()
       ]
     )
@@ -259,7 +259,7 @@ defmodule Exiron.Hub.SendResults do
   end
 
   defp complete_partial_push(state, %SendCommand{} = command, reason, messages, failures) do
-    reply = reply_push(command.from, {:partial_error, reason, messages})
+    reply = reply_push(command, {:partial_error, reason, messages})
 
     state
     |> record_push_failures(command.hook, failures)
@@ -298,12 +298,30 @@ defmodule Exiron.Hub.SendResults do
     end)
   end
 
-  defp reply_push(from, {:ok, messages}), do: Effect.reply(from, {:ok, length(messages)})
+  defp maybe_receipts(payload, %{return_receipts?: true}, message),
+    do: Map.put(payload, :receipts, Exiron.Hub.DeliveryReceipt.from_messages([message]))
 
-  defp reply_push(from, {:partial_error, reason, _messages}),
+  defp maybe_receipts(payload, _command, _message), do: payload
+
+  defp response_receipt(%{return_receipts?: true}, message),
+    do: {:ok, %{ok: true, receipts: Exiron.Hub.DeliveryReceipt.from_messages([message])}}
+
+  defp response_receipt(_command, _message), do: :ok
+
+  defp reply_push(%{return_receipts?: true, from: from}, {:ok, messages}) do
+    Effect.reply(
+      from,
+      {:ok,
+       %{sent: length(messages), receipts: Exiron.Hub.DeliveryReceipt.from_messages(messages)}}
+    )
+  end
+
+  defp reply_push(%{from: from}, {:ok, messages}), do: Effect.reply(from, {:ok, length(messages)})
+
+  defp reply_push(%{from: from}, {:partial_error, reason, _messages}),
     do: Effect.reply(from, {:error, push_error_reason(reason)})
 
-  defp reply_push(from, {:error, reason}),
+  defp reply_push(%{from: from}, {:error, reason}),
     do: Effect.reply(from, {:error, push_error_reason(reason)})
 
   defp push_error_reason(%ExGram.Error{code: code}) when code in @telegram_auth_failure_codes,

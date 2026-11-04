@@ -60,70 +60,75 @@ type wireAuthResponse struct {
 }
 
 type wireOKResponse struct {
-	MessageIDs []int64 `json:"message_ids,omitempty"`
-	OK         bool    `json:"ok"`
-	Final      *bool   `json:"final,omitempty"`
-	MessageID  *int64  `json:"message_id,omitempty"`
+	Receipts   []DeliveryReceipt `json:"receipts,omitempty"`
+	MessageIDs []int64           `json:"message_ids,omitempty"`
+	OK         bool              `json:"ok"`
+	Final      *bool             `json:"final,omitempty"`
+	MessageID  *int64            `json:"message_id,omitempty"`
 }
 
 type wirePushResponse struct {
-	OK   bool `json:"ok"`
-	Sent int  `json:"sent"`
+	Receipts []DeliveryReceipt `json:"receipts,omitempty"`
+	OK       bool              `json:"ok"`
+	Sent     int               `json:"sent"`
 }
 
 type wireDataPayload struct {
-	IdempotencyKey  string          `json:"idempotency_key,omitempty"`
-	CaptionOverflow bool            `json:"caption_overflow,omitempty"`
-	InlineKeyboard  *InlineKeyboard `json:"inline_keyboard,omitempty"`
-	Datatype        string          `json:"datatype"`
-	Data            string          `json:"data"`
-	StickerEmoji    *string         `json:"sticker_emoji,omitempty"`
-	Bot             *string         `json:"bot,omitempty"`
-	MessageThreadID *int64          `json:"message_thread_id,omitempty"`
-	Caption         *string         `json:"caption,omitempty"`
-	Entities        []MessageEntity `json:"entities,omitempty"`
-	CaptionEntities []MessageEntity `json:"caption_entities,omitempty"`
-	FileName        *string         `json:"file_name,omitempty"`
-	MIMEType        *string         `json:"mime_type,omitempty"`
-	ParseMode       *string         `json:"parse_mode,omitempty"`
+	DeliveryReceipts bool            `json:"delivery_receipts,omitempty"`
+	IdempotencyKey   string          `json:"idempotency_key,omitempty"`
+	CaptionOverflow  bool            `json:"caption_overflow,omitempty"`
+	InlineKeyboard   *InlineKeyboard `json:"inline_keyboard,omitempty"`
+	Datatype         string          `json:"datatype"`
+	Data             string          `json:"data"`
+	StickerEmoji     *string         `json:"sticker_emoji,omitempty"`
+	Bot              *string         `json:"bot,omitempty"`
+	MessageThreadID  *int64          `json:"message_thread_id,omitempty"`
+	Caption          *string         `json:"caption,omitempty"`
+	Entities         []MessageEntity `json:"entities,omitempty"`
+	CaptionEntities  []MessageEntity `json:"caption_entities,omitempty"`
+	FileName         *string         `json:"file_name,omitempty"`
+	MIMEType         *string         `json:"mime_type,omitempty"`
+	ParseMode        *string         `json:"parse_mode,omitempty"`
 }
 
 type wireDataPayloadWithChatID struct {
-	IdempotencyKey  string          `json:"idempotency_key,omitempty"`
-	CaptionOverflow bool            `json:"caption_overflow,omitempty"`
-	InlineKeyboard  *InlineKeyboard `json:"inline_keyboard,omitempty"`
-	ChatID          int64           `json:"chat_id"`
-	Datatype        string          `json:"datatype"`
-	Data            string          `json:"data"`
-	StickerEmoji    *string         `json:"sticker_emoji,omitempty"`
-	Bot             *string         `json:"bot,omitempty"`
-	MessageThreadID *int64          `json:"message_thread_id,omitempty"`
-	Caption         *string         `json:"caption,omitempty"`
-	Entities        []MessageEntity `json:"entities,omitempty"`
-	CaptionEntities []MessageEntity `json:"caption_entities,omitempty"`
-	FileName        *string         `json:"file_name,omitempty"`
-	MIMEType        *string         `json:"mime_type,omitempty"`
-	ParseMode       *string         `json:"parse_mode,omitempty"`
+	DeliveryReceipts bool            `json:"delivery_receipts,omitempty"`
+	IdempotencyKey   string          `json:"idempotency_key,omitempty"`
+	CaptionOverflow  bool            `json:"caption_overflow,omitempty"`
+	InlineKeyboard   *InlineKeyboard `json:"inline_keyboard,omitempty"`
+	ChatID           int64           `json:"chat_id"`
+	Datatype         string          `json:"datatype"`
+	Data             string          `json:"data"`
+	StickerEmoji     *string         `json:"sticker_emoji,omitempty"`
+	Bot              *string         `json:"bot,omitempty"`
+	MessageThreadID  *int64          `json:"message_thread_id,omitempty"`
+	Caption          *string         `json:"caption,omitempty"`
+	Entities         []MessageEntity `json:"entities,omitempty"`
+	CaptionEntities  []MessageEntity `json:"caption_entities,omitempty"`
+	FileName         *string         `json:"file_name,omitempty"`
+	MIMEType         *string         `json:"mime_type,omitempty"`
+	ParseMode        *string         `json:"parse_mode,omitempty"`
 }
 
 type wireResponsePayload struct {
-	IdempotencyKey  string          `json:"idempotency_key,omitempty"`
-	CaptionOverflow bool            `json:"caption_overflow,omitempty"`
-	ReplyToOriginal bool            `json:"reply_to_original,omitempty"`
-	EditOrigin      bool            `json:"edit_origin,omitempty"`
-	InlineKeyboard  *InlineKeyboard `json:"inline_keyboard,omitempty"`
-	ReqID           string          `json:"req_id"`
-	Datatype        string          `json:"datatype"`
-	Data            string          `json:"data"`
-	StickerEmoji    *string         `json:"sticker_emoji,omitempty"`
-	MessageThreadID *int64          `json:"message_thread_id,omitempty"`
-	Caption         *string         `json:"caption,omitempty"`
-	Entities        []MessageEntity `json:"entities,omitempty"`
-	CaptionEntities []MessageEntity `json:"caption_entities,omitempty"`
-	FileName        *string         `json:"file_name,omitempty"`
-	MIMEType        *string         `json:"mime_type,omitempty"`
-	ParseMode       *string         `json:"parse_mode,omitempty"`
-	Final           *bool           `json:"final,omitempty"`
+	DeliveryReceipts bool            `json:"delivery_receipts,omitempty"`
+	IdempotencyKey   string          `json:"idempotency_key,omitempty"`
+	CaptionOverflow  bool            `json:"caption_overflow,omitempty"`
+	ReplyToOriginal  bool            `json:"reply_to_original,omitempty"`
+	EditOrigin       bool            `json:"edit_origin,omitempty"`
+	InlineKeyboard   *InlineKeyboard `json:"inline_keyboard,omitempty"`
+	ReqID            string          `json:"req_id"`
+	Datatype         string          `json:"datatype"`
+	Data             string          `json:"data"`
+	StickerEmoji     *string         `json:"sticker_emoji,omitempty"`
+	MessageThreadID  *int64          `json:"message_thread_id,omitempty"`
+	Caption          *string         `json:"caption,omitempty"`
+	Entities         []MessageEntity `json:"entities,omitempty"`
+	CaptionEntities  []MessageEntity `json:"caption_entities,omitempty"`
+	FileName         *string         `json:"file_name,omitempty"`
+	MIMEType         *string         `json:"mime_type,omitempty"`
+	ParseMode        *string         `json:"parse_mode,omitempty"`
+	Final            *bool           `json:"final,omitempty"`
 }
 
 type wireStatus struct {

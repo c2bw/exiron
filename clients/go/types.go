@@ -75,20 +75,23 @@ type TelegramUser struct {
 
 // OkResponse is returned by endpoints that only acknowledge success.
 type OkResponse struct {
-	MessageIDs []int64 `json:"message_ids,omitempty"`
-	OK         bool    `json:"ok"`
-	Final      *bool   `json:"final,omitempty"`
-	MessageID  *int64  `json:"message_id,omitempty"`
+	Receipts   []DeliveryReceipt `json:"receipts,omitempty"`
+	MessageIDs []int64           `json:"message_ids,omitempty"`
+	OK         bool              `json:"ok"`
+	Final      *bool             `json:"final,omitempty"`
+	MessageID  *int64            `json:"message_id,omitempty"`
 }
 
 // PushResponse is returned by /api/push.
 type PushResponse struct {
-	OK   bool `json:"ok"`
-	Sent int  `json:"sent"`
+	Receipts []DeliveryReceipt `json:"receipts,omitempty"`
+	OK       bool              `json:"ok"`
+	Sent     int               `json:"sent"`
 }
 
 // PushOptions controls optional /api/push delivery behavior.
 type PushOptions struct {
+	DeliveryReceipts bool `json:"delivery_receipts,omitempty"`
 	// IdempotencyKey identifies one response/push operation for safe result replay.
 	IdempotencyKey string
 	// CaptionOverflow sends excess media caption text as following messages.
@@ -243,6 +246,7 @@ type ClientEvent struct {
 // ResponseOptions adds opt-in streaming and metadata to existing response calls.
 // A nil Final preserves one-shot completion; false keeps a text request open.
 type ResponseOptions struct {
+	DeliveryReceipts bool `json:"delivery_receipts,omitempty"`
 	// IdempotencyKey identifies one response operation (a base key in StreamText).
 	IdempotencyKey string
 	// CaptionOverflow sends excess media caption text as following messages.
@@ -343,4 +347,12 @@ type HookClientPresence struct {
 	AwaitingResponse      int                       `json:"awaiting_response"`
 	SendingRequests       int                       `json:"sending_requests"`
 	OtherAssignedRequests int                       `json:"other_assigned_requests"`
+}
+
+// DeliveryReceipt contains only Telegram-confirmed IDs, scoped to one destination.
+type DeliveryReceipt struct {
+	ServiceID       int64   `json:"service_id"`
+	ChatID          int64   `json:"chat_id"`
+	MessageThreadID *int64  `json:"message_thread_id"`
+	MessageIDs      []int64 `json:"message_ids"`
 }

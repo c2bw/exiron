@@ -114,7 +114,7 @@ defmodule ExironWeb.ExironController do
     with_payload(conn, params, fn credential, data, opts ->
       with {:ok, sent} <-
              Hub.push(credential, params["datatype"], data, params["chat_id"], opts) do
-        {:ok, %{ok: true, sent: sent}}
+        {:ok, if(is_map(sent), do: Map.put(sent, :ok, true), else: %{ok: true, sent: sent})}
       end
     end)
   end

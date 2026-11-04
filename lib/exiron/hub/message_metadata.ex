@@ -45,6 +45,7 @@ defmodule Exiron.Hub.MessageMetadata do
          is_boolean(Keyword.get(opts, :caption_overflow, false)) and
          (not Keyword.get(opts, :caption_overflow, false) or
             datatype in ["image", "video", "audio", "file", "album"]) and
+         is_boolean(Keyword.get(opts, :delivery_receipts, false)) and
          is_boolean(Keyword.get(opts, :final, true)) and
          is_boolean(Keyword.get(opts, :edit_origin, false)) and
          is_boolean(Keyword.get(opts, :reply_to_original, false)) and

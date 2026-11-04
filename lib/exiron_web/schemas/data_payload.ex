@@ -12,6 +12,11 @@ defmodule ExironWeb.Schemas.DataPayload do
     properties:
       Map.merge(
         %{
+          delivery_receipts: %Schema{
+            type: :boolean,
+            default: false,
+            description: "Return Telegram-confirmed message IDs scoped to each service and chat."
+          },
           datatype: SchemaHelpers.datatype(),
           data: %Schema{type: :string, format: :byte},
           sticker_emoji: %Schema{

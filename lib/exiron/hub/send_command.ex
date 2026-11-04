@@ -15,6 +15,7 @@ defmodule Exiron.Hub.SendCommand do
 
   defstruct payload_bytes: 0,
             return_diagnostics?: false,
+            return_receipts?: false,
             kind: nil,
             from: nil,
             request_id: nil,

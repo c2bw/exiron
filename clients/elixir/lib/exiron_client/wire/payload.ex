@@ -48,6 +48,7 @@ defmodule ExironClient.Wire.Payload do
     Enum.reduce(
       [
         :idempotency_key,
+        :delivery_receipts,
         :caption,
         :caption_overflow,
         :entities,

@@ -10,6 +10,7 @@ defmodule ExironWeb.Schemas.OkResponse do
     required: [:ok],
     properties: %{
       ok: %Schema{type: :boolean},
+      receipts: %Schema{type: :array, items: ExironWeb.Schemas.DeliveryReceipt},
       final: %Schema{type: :boolean},
       message_ids: %Schema{type: :array, items: %Schema{type: :integer}, maxItems: 32},
       message_id: %Schema{type: :integer}

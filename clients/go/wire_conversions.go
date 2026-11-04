@@ -12,11 +12,11 @@ func (w wireAuthResponse) toAuthResponse() AuthResponse {
 }
 
 func (w wireOKResponse) toOKResponse() OkResponse {
-	return OkResponse{OK: w.OK, Final: w.Final, MessageID: w.MessageID, MessageIDs: w.MessageIDs}
+	return OkResponse{Receipts: w.Receipts, OK: w.OK, Final: w.Final, MessageID: w.MessageID, MessageIDs: w.MessageIDs}
 }
 
 func (w wirePushResponse) toPushResponse() PushResponse {
-	return PushResponse{OK: w.OK, Sent: w.Sent}
+	return PushResponse{Receipts: w.Receipts, OK: w.OK, Sent: w.Sent}
 }
 
 func (w wireTelegramUser) toTelegramUser() TelegramUser {

@@ -228,6 +228,7 @@ defmodule Exiron.Hub.ClientOperations do
         state,
         from,
         %SendCommand{
+          return_receipts?: opts[:delivery_receipts] == true,
           return_diagnostics?: opts[:delivery_diagnostics] == true,
           payload_bytes: Exiron.Hub.SendBudget.payload_bytes(action, opts),
           kind: :action,
@@ -284,6 +285,7 @@ defmodule Exiron.Hub.ClientOperations do
         RecentReplies.busy(state, request_id, true),
         from,
         %SendCommand{
+          return_receipts?: opts[:delivery_receipts] == true,
           return_diagnostics?: opts[:delivery_diagnostics] == true,
           payload_bytes: Exiron.Hub.SendBudget.payload_bytes(data, opts),
           kind: :edit,
@@ -366,6 +368,7 @@ defmodule Exiron.Hub.ClientOperations do
     operation = %{
       SendCommand.respond(from, request_id, pending, hook, message)
       | payload_bytes: Exiron.Hub.SendBudget.payload_bytes(data, opts),
+        return_receipts?: opts[:delivery_receipts] == true,
         return_diagnostics?: opts[:delivery_diagnostics] == true
     }
 
@@ -395,6 +398,7 @@ defmodule Exiron.Hub.ClientOperations do
     operation = %{
       SendCommand.push(from, hook)
       | payload_bytes: Exiron.Hub.SendBudget.payload_bytes(data, opts),
+        return_receipts?: opts[:delivery_receipts] == true,
         return_diagnostics?: opts[:delivery_diagnostics] == true
     }
 

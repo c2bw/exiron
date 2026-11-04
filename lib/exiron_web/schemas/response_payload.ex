@@ -31,6 +31,11 @@ defmodule ExironWeb.Schemas.ResponsePayload do
             description:
               "False updates a text reply without completing the request; true completes it."
           },
+          delivery_receipts: %Schema{
+            type: :boolean,
+            default: false,
+            description: "Return Telegram-confirmed message IDs scoped to each service and chat."
+          },
           datatype: SchemaHelpers.datatype(),
           data: %Schema{type: :string, format: :byte},
           sticker_emoji: %Schema{

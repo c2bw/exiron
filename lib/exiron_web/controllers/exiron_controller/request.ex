@@ -37,6 +37,7 @@ defmodule ExironWeb.ExironController.Request do
       Enum.reduce(
         [
           :idempotency_key,
+          :delivery_receipts,
           :final,
           :inline_keyboard,
           :edit_origin,

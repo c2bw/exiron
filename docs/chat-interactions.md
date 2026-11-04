@@ -119,3 +119,32 @@ consumed or unauthorized prompts reject input without forwarding listener copies
 Prompts use the normal bounded send path and retain at most 500 small in-memory
 records, without question bodies. Restart or eviction loses context; request
 `/help` again. Ignore a prompt to abandon it. No request is created until you reply.
+
+## Durable reply matching in applications
+
+Applications can request `delivery_receipts: true` on `/api/responses`,
+`/api/idempotent/responses`, `/api/push`, and `/api/idempotent/push`.
+Successful responses add `receipts`, without changing the usual `ok`, `sent`,
+or streaming-update fields. Clients that omit the flag keep their existing responses.
+
+```json
+{"ok":true,"sent":1,"receipts":[{"service_id":222,"chat_id":123,"message_thread_id":null,"message_ids":[901,902]}]}
+```
+
+Each receipt identifies one destination and includes all confirmed Telegram IDs
+for split text or album/caption deliveries. No bot tokens or message contents are
+included. IDs are never inferred from an attempted send. Errors and ambiguous
+transport failures are not successful receipts.
+
+The Elixir SDK accepts `delivery_receipts: true` in response/push options. The Go
+SDK exposes `DeliveryReceipts` in `ResponseOptions` and `PushOptions`, and returns
+`Receipts` on success. Idempotent retries return the same receipts without another
+send while the normal idempotency cache remains available.
+
+To implement durable reply handling, persist the receipt IDs with the application
+message. Match incoming `reply_to_message_id` by `service_id`, `chat_id`, and topic.
+This does not use Exiron's temporary follow-up cache. The application must still
+receive listener messages for the chat; receipt metadata does not change routing
+or bypass access rules. Old sends whose IDs were not saved cannot be reconstructed
+from these receipts. Telegram IDs alone do not guarantee exactly-once delivery
+when a process or network fails between a send and its acknowledgment.
