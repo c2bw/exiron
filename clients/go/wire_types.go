@@ -22,6 +22,7 @@ type wireMessage struct {
 	Instance         *string           `json:"instance"`
 	Datatype         string            `json:"datatype"`
 	Data             *string           `json:"data"`
+	FileUniqueID     *string           `json:"file_unique_id"`
 	StickerID        *string           `json:"sticker_id"`
 	StickerEmoji     *string           `json:"sticker_emoji"`
 	EmojiList        []string          `json:"emoji_list"`
@@ -230,6 +231,7 @@ type wireEvent struct {
 	Preview          string    `json:"preview"`
 	Hook             *string   `json:"hook"`
 	ImageSrc         *string   `json:"image_src"`
+	FileUniqueID     *string   `json:"file_unique_id"`
 	StickerID        *string   `json:"sticker_id"`
 	StickerEmoji     *string   `json:"sticker_emoji"`
 	EmojiList        []string  `json:"emoji_list"`

@@ -4,7 +4,7 @@ defmodule Exiron.ProtocolTest do
   alias Exiron.Protocol
 
   test "exposes manifest protocol metadata" do
-    assert Protocol.protocol_version() == "1.19"
+    assert Protocol.protocol_version() == "1.20"
     assert "websocket" in Protocol.capabilities()
     assert "followup_context" in Protocol.capabilities()
 

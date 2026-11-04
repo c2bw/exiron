@@ -27,10 +27,16 @@ defmodule Exiron.Hub.Telegram.MessageParserTest do
   end
 
   test "preserves sticker identity and optional emoji" do
-    assert {:file, "sticker", "file", %{sticker_id: "sticker", sticker_emoji: "🙂"}} =
-             MessageParser.content(%{sticker: %{file_id: "sticker", emoji: "🙂"}})
+    assert {:file, "sticker", "file",
+            %{sticker_id: "sticker", file_unique_id: "unique", sticker_emoji: "🙂"}} =
+             MessageParser.content(%{
+               sticker: %{file_id: "sticker", file_unique_id: "unique", emoji: "🙂"}
+             })
 
-    assert {:file, "plain", "file", %{sticker_id: "plain"}} =
+    assert {:file, "no-emoji", "file", %{sticker_id: "no-emoji", file_unique_id: "unique"}} =
+             MessageParser.content(%{sticker: %{file_id: "no-emoji", file_unique_id: "unique"}})
+
+    assert {:file, "plain", "file", %{sticker_id: "plain", file_unique_id: nil}} =
              MessageParser.content(%{sticker: %{file_id: "plain", emoji: ""}})
   end
 

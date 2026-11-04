@@ -10,6 +10,24 @@ defmodule ExironClient.WireTest do
   alias ExironClient.Wire.Payload, as: WirePayload
   import ExironClient.FixtureHelpers, only: [contract_json: 1]
 
+  test "request and listen decoders preserve sticker identity and accept older payloads" do
+    fixture = contract_json("requests_response.json") |> Map.fetch!("requests") |> hd()
+
+    for msgtype <- ["request", "listen"], unique_id <- ["sticker-unique-id", nil, :missing] do
+      params = Map.put(fixture, "msgtype", msgtype)
+
+      params =
+        if unique_id == :missing,
+          do: Map.delete(params, "file_unique_id"),
+          else: Map.put(params, "file_unique_id", unique_id)
+
+      assert {:ok, message} = PublicMessage.from_server(params, :request)
+      assert message.msgtype == msgtype
+      assert message.sticker_id == "sticker-id"
+      assert message.file_unique_id == if(unique_id == :missing, do: nil, else: unique_id)
+    end
+  end
+
   test "message wire decoding remains equivalent to the public model API" do
     params = contract_json("requests_response.json") |> Map.fetch!("requests") |> hd()
 
@@ -39,7 +57,7 @@ defmodule ExironClient.WireTest do
     assert %PublicAuth{
              auth_response: "OK",
              hook: "assistant",
-             protocol_version: "1.19",
+             protocol_version: "1.20",
              extra: %{"future_field" => "future-value"}
            } = WireAuth.decode(response)
 

@@ -72,6 +72,10 @@ defmodule ExironWeb.ExironControllerContractTest do
     assert get_in(paths, ["/api/push", "post", "operationId"]) ==
              "ExironWeb.ExironController.push"
 
+    assert get_in(schemas, ["ClientRequest", "properties", "file_unique_id", "type"]) == "string"
+    assert get_in(schemas, ["ClientRequest", "properties", "file_unique_id", "nullable"])
+    refute "file_unique_id" in schemas["ClientRequest"]["required"]
+
     response_payload_properties =
       schemas |> Map.fetch!("ResponsePayload") |> Map.fetch!("properties")
 

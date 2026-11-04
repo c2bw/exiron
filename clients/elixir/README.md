@@ -332,3 +332,12 @@ A connected session invokes `on_disconnect` once when it disconnects or terminat
 including supervisor shutdown. A server-accepted reconnect starts a new callback
 cycle; failed handshakes do not produce disconnect callbacks for unaccepted sessions.
 Untrappable process kills cannot run termination callbacks.
+
+## Sticker identity
+
+Protocol 1.20 advertises `sticker_file_unique_id`. Incoming sticker messages
+carry optional `file_unique_id` (Go: `FileUniqueID`) in both request and listen
+deliveries over HTTP and WebSocket. Use it to identify and deduplicate the same
+file across deliveries. `sticker_id` (Go: `StickerID`) remains Telegram's
+sendable `file_id`; a `file_unique_id` cannot be used to download or send a file.
+Older servers and payloads without this field decode with a nil value.

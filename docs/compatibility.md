@@ -36,3 +36,13 @@ fixtures, configuration examples and Go module paths, alongside the server and
 SDK test suites. When changing a component version, update its version source,
 affected fixtures and compatibility notes together. Use
 [build identity](building.md#build-identity) to inspect an assembled application.
+
+## Sticker file identity
+
+Protocol 1.20 adds capability `sticker_file_unique_id` and the optional, nullable
+`file_unique_id` field on request/listen messages and activity events. Incoming
+Telegram stickers retain this identity through routing, queueing and replay on
+both HTTP and WebSocket. Use it for file identification and deduplication;
+`sticker_id` remains the sendable Telegram `file_id`. The unique identifier
+cannot be used to download or resend a file. Older payloads without the field
+remain valid and decode as nil in both SDKs.

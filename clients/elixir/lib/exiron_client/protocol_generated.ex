@@ -2,7 +2,7 @@
 defmodule ExironClient.Protocol.Generated do
   @moduledoc false
 
-  @version "1.19"
+  @version "1.20"
   @capabilities [
     "http_auth",
     "http_status",
@@ -13,6 +13,7 @@ defmodule ExironClient.Protocol.Generated do
     "websocket",
     "listen_mode",
     "sticker_emoji",
+    "sticker_file_unique_id",
     "telegram_bot_selection",
     "text_updates",
     "message_edits",

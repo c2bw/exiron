@@ -59,7 +59,14 @@ defmodule Exiron.Hub.Telegram.PollerTest do
     assert {:ok, []} = Hub.poll("ai-token", listen: true)
 
     start_poller!(
-      message: %{chat: %{id: 123}, sticker: %{file_id: "sticker-id", emoji: sticker_emoji}},
+      message: %{
+        chat: %{id: 123},
+        sticker: %{
+          file_id: "sticker-id",
+          file_unique_id: "sticker-unique-id",
+          emoji: sticker_emoji
+        }
+      },
       get_file: fn "sticker-id", [token: "bot-token"] ->
         {:ok, %{file_path: "stickers/fire.webp"}}
       end,
@@ -76,6 +83,7 @@ defmodule Exiron.Hub.Telegram.PollerTest do
       assert request.datatype == "file"
       assert Base.decode64!(request.data) == "sticker bytes"
       assert request.sticker_id == "sticker-id"
+      assert request.file_unique_id == "sticker-unique-id"
       assert request.sticker_emoji == sticker_emoji
       assert request.emoji_list == emoji_list
 
@@ -83,6 +91,7 @@ defmodule Exiron.Hub.Telegram.PollerTest do
                %{
                  datatype: "file",
                  sticker_id: "sticker-id",
+                 file_unique_id: "sticker-unique-id",
                  sticker_emoji: ^sticker_emoji,
                  emoji_list: ^emoji_list
                }

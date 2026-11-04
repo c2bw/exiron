@@ -51,6 +51,7 @@ func TestWireMessageConversionPreservesPublicFieldsAndDecodesData(t *testing.T) 
 	languageCode := "en"
 	instance := "assistant-bot"
 	stickerID := "sticker-id"
+	fileUniqueID := "unique-sticker"
 	stickerEmoji := "🤣"
 	messageID := int64(789)
 	replyToMessageID := int64(456)
@@ -65,6 +66,7 @@ func TestWireMessageConversionPreservesPublicFieldsAndDecodesData(t *testing.T) 
 		Datatype:         string(DatatypeText),
 		Data:             pointer(base64.StdEncoding.EncodeToString([]byte("hello"))),
 		StickerID:        &stickerID,
+		FileUniqueID:     &fileUniqueID,
 		StickerEmoji:     &stickerEmoji,
 		EmojiList:        []string{"🤣"},
 		MessageID:        &messageID,
@@ -85,6 +87,7 @@ func TestWireMessageConversionPreservesPublicFieldsAndDecodesData(t *testing.T) 
 		Datatype:         DatatypeText,
 		Data:             []byte("hello"),
 		StickerID:        &stickerID,
+		FileUniqueID:     &fileUniqueID,
 		StickerEmoji:     &stickerEmoji,
 		EmojiList:        []string{"🤣"},
 		MessageID:        &messageID,
@@ -135,4 +138,39 @@ func TestPublicModelsKeepJSONBehavior(t *testing.T) {
 
 func pointer(value string) *string {
 	return &value
+}
+
+func TestStickerFileUniqueIDDecoding(t *testing.T) {
+	for _, msgtype := range []string{"request", "listen"} {
+		for _, field := range []string{`,"file_unique_id":"unique-sticker"`, `,"file_unique_id":null`, ``} {
+			payload := `{"msgtype":"` + msgtype + `","datatype":"file","data":"c3RpY2tlciBieXRlcw==","sticker_id":"sendable-id"` + field + `}`
+			var wire wireMessage
+			if err := json.Unmarshal([]byte(payload), &wire); err != nil {
+				t.Fatal(err)
+			}
+			message, err := decodeMessage(wire)
+			if err != nil {
+				t.Fatal(err)
+			}
+			if message.Msgtype != msgtype || message.StickerID == nil || *message.StickerID != "sendable-id" || string(message.Data) != "sticker bytes" {
+				t.Fatalf("sticker metadata lost: %#v", message)
+			}
+			if field == `,"file_unique_id":"unique-sticker"` {
+				if message.FileUniqueID == nil || *message.FileUniqueID != "unique-sticker" {
+					t.Fatalf("file identity lost: %#v", message)
+				}
+			} else if message.FileUniqueID != nil {
+				t.Fatalf("missing/null file identity = %v", message.FileUniqueID)
+			}
+		}
+	}
+}
+
+func TestEventConversionPreservesStickerFileIdentity(t *testing.T) {
+	uniqueID := "unique-sticker"
+	stickerID := "sendable-id"
+	event := (wireEvent{FileUniqueID: &uniqueID, StickerID: &stickerID}).toEvent()
+	if event.FileUniqueID == nil || *event.FileUniqueID != uniqueID || event.StickerID == nil || *event.StickerID != stickerID {
+		t.Fatalf("sticker identity lost: %#v", event)
+	}
 }

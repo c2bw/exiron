@@ -153,6 +153,7 @@ func (w wireEvent) toEvent() Event {
 		Hook:             w.Hook,
 		ImageSrc:         w.ImageSrc,
 		StickerID:        w.StickerID,
+		FileUniqueID:     w.FileUniqueID,
 		StickerEmoji:     w.StickerEmoji,
 		EmojiList:        w.EmojiList,
 		MessageID:        w.MessageID,

@@ -306,3 +306,12 @@ Enable `HandlerOrderByChat: true` with concurrency to preserve handler order wit
 [Optional response feedback](../../docs/response-feedback.md): `WithFeedback`
 appends a rating row without removing existing buttons; `ParseFeedback` identifies
 the rated request and clicker. Reply modes and transports remain explicit choices.
+
+## Sticker identity
+
+Protocol 1.20 advertises `sticker_file_unique_id`. Incoming sticker messages
+carry optional `file_unique_id` (Go: `FileUniqueID`) in both request and listen
+deliveries over HTTP and WebSocket. Use it to identify and deduplicate the same
+file across deliveries. `sticker_id` (Go: `StickerID`) remains Telegram's
+sendable `file_id`; a `file_unique_id` cannot be used to download or send a file.
+Older servers and payloads without this field decode with a nil value.

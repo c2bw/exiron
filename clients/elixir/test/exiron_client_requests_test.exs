@@ -149,6 +149,7 @@ defmodule ExironClientRequestsTest do
     assert message.instance == "assistant-bot"
     assert message.datatype == "text"
     assert message.sticker_id == "sticker-id"
+    assert message.file_unique_id == "sticker-unique-id"
     assert message.sticker_emoji == "\u{1F923}"
 
     assert message.emoji_list == [

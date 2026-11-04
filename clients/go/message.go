@@ -59,6 +59,7 @@ func decodeMessage(message wireMessage) (Message, error) {
 		Datatype:         Datatype(message.Datatype),
 		Data:             data,
 		StickerID:        message.StickerID,
+		FileUniqueID:     message.FileUniqueID,
 		StickerEmoji:     message.StickerEmoji,
 		EmojiList:        message.EmojiList,
 		MessageID:        message.MessageID,

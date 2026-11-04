@@ -53,6 +53,12 @@ defmodule ExironWeb.Schemas.ClientRequest do
           datatype: SchemaHelpers.datatype(),
           data: %Schema{type: :string, format: :byte},
           sticker_id: SchemaHelpers.nullable_string(),
+          file_unique_id: %Schema{
+            type: :string,
+            nullable: true,
+            description:
+              "Optional Telegram file identity for sticker deduplication; cannot be used to download or send a file. sticker_id remains the sendable file_id."
+          },
           sticker_emoji: SchemaHelpers.nullable_string(),
           emoji_list: SchemaHelpers.string_list(),
           message_id: SchemaHelpers.nullable_integer(),

@@ -3,7 +3,7 @@
 package exiron
 
 // ProtocolVersion is the client contract version.
-const ProtocolVersion = "1.19"
+const ProtocolVersion = "1.20"
 
 const (
 	socketFrameTypeConnected = "connected"
@@ -39,6 +39,7 @@ var protocolCapabilities = [...]string{
 	"websocket",
 	"listen_mode",
 	"sticker_emoji",
+	"sticker_file_unique_id",
 	"telegram_bot_selection",
 	"text_updates",
 	"message_edits",

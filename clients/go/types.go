@@ -33,6 +33,8 @@ func (p ProtocolInfo) Supports(capability string) bool {
 // Data is decoded payload data. For text payloads, it is the UTF-8 message
 // text. For callbacks, it is application button data. For file-like payloads,
 // it is the raw file bytes.
+// FileUniqueID optionally identifies a Telegram sticker for deduplication; it
+// cannot be used to download or send a file. StickerID remains the sendable file_id.
 type Message struct {
 	// FollowupReqID links an inherited follow-up to the immediate previous request.
 	FollowupReqID    *string         `json:"followup_req_id,omitempty"`
@@ -45,6 +47,7 @@ type Message struct {
 	Instance         *string         `json:"instance"`
 	Datatype         Datatype        `json:"datatype"`
 	Data             []byte          `json:"-"`
+	FileUniqueID     *string         `json:"file_unique_id"`
 	StickerID        *string         `json:"sticker_id"`
 	StickerEmoji     *string         `json:"sticker_emoji"`
 	EmojiList        []string        `json:"emoji_list"`
@@ -218,6 +221,7 @@ type Event struct {
 	Preview          string    `json:"preview"`
 	Hook             *string   `json:"hook"`
 	ImageSrc         *string   `json:"image_src"`
+	FileUniqueID     *string   `json:"file_unique_id"`
 	StickerID        *string   `json:"sticker_id"`
 	StickerEmoji     *string   `json:"sticker_emoji"`
 	EmojiList        []string  `json:"emoji_list"`

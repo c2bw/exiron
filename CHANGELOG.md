@@ -4,7 +4,9 @@
 
 ### Server and operations
 
-- Capability discovery and protocol 1.19 support, with additive client controls.
+- Preserve optional Telegram sticker `file_unique_id` through request/listen delivery, replay, activity events and both SDKs; retain sendable `sticker_id` behavior.
+
+- Capability discovery and protocol 1.20 support, with additive client controls.
 - Bounded queues, buffered payload/send byte budgets, fair sends and overload diagnostics.
 - Request tracing, delivery certainty diagnostics, cancellation and client runtime visibility.
 - Configuration validation, controlled reload, history and explicit rollback.
@@ -44,7 +46,7 @@
 - Existing transports, one-shot replies and explicit streaming remain supported.
 - Lifecycle features remain opt-in; the reference workers enable several deliberately.
 - Deploy a capable server before enabling SDK features requiring negotiation.
-- Wire protocol `1.19`, package versions and configuration schema `2` are separate; schema `1` remains supported without access lists.
+- Wire protocol `1.20`, package versions and configuration schema `2` are separate; schema `1` remains supported without access lists.
 - Delivery, quarantine, reports and receipts remain in memory and are lost on restart.
 
 See the [upgrade guide](docs/upgrading.md) for coordinated updates and rollback

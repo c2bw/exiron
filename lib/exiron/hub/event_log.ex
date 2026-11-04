@@ -70,6 +70,7 @@ defmodule Exiron.Hub.EventLog do
           scope: media_scope(hook)
         ),
       sticker_id: sticker_id(message),
+      file_unique_id: message.file_unique_id,
       sticker_emoji: message.sticker_emoji,
       emoji_list: Message.emoji_list(message.sticker_emoji),
       message_id: message.message_id,

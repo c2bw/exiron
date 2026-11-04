@@ -5,6 +5,9 @@ defmodule ExironClient.Message do
   The `data` field is decoded binary data. For text payloads, it is the message
   text. For callbacks, it is the application button data. For file-like payloads,
   it is the raw file bytes.
+
+  `file_unique_id` is optional Telegram sticker identity for deduplication.
+  `sticker_id` remains the sendable Telegram `file_id`.
   """
 
   alias ExironClient.{Error, Wire}
@@ -30,6 +33,7 @@ defmodule ExironClient.Message do
           instance: String.t() | nil,
           datatype: String.t(),
           sticker_id: String.t() | nil,
+          file_unique_id: String.t() | nil,
           sticker_emoji: String.t() | nil,
           emoji_list: [String.t()],
           data: binary()
@@ -46,6 +50,7 @@ defmodule ExironClient.Message do
     :instance,
     :datatype,
     :sticker_id,
+    :file_unique_id,
     :sticker_emoji,
     :emoji_list,
     :data,

@@ -515,7 +515,15 @@ defmodule Exiron.Hub.ClientSessionsIntegrationTest do
       assert {:ok, %{messages: []}} =
                Hub.connect_socket("ai-token", client_id: "socket", listen: false, pid: self())
 
-      :ok = Hub.incoming_service_message(Message.new(222, 123, "text", "/ai hello", "bot-token"))
+      :ok =
+        Hub.incoming_service_message(
+          Message.new(222, 123, "file", "sticker bytes", "bot-token",
+            caption: "/ai sticker",
+            sticker_id: "sendable-file-id",
+            file_unique_id: "unique-sticker"
+          )
+        )
+
       assert_receive {:exiron_messages, first_ref, [first]}
 
       assert :ok = Hub.disconnect_socket("assistant", "socket", self())
@@ -531,6 +539,9 @@ defmodule Exiron.Hub.ClientSessionsIntegrationTest do
 
       assert second_ref != first_ref
       assert second.req_id == first.req_id
+      assert second == first
+      assert second.file_unique_id == "unique-sticker"
+      assert second.sticker_id == "sendable-file-id"
       assert :sys.get_state(Hub).delivery.pending[request_id].claimed?
     end
 

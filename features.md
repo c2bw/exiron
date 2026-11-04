@@ -920,7 +920,8 @@ Both HTTP polling and WebSocket delivery use the same message object:
 | `instance` | string or null | Configured or resolved bot name, never the token. |
 | `datatype` | supported datatype string | Normalized payload type. |
 | `data` | Base64 string | Raw payload encoded at the wire boundary. |
-| `sticker_id` | string or null | Original sticker file ID when known. |
+| `sticker_id` | string or null | Original sendable Telegram sticker `file_id` when known. |
+| `file_unique_id` | optional string or null | Telegram sticker file identity for deduplication; cannot be used to send or download the file. |
 | `sticker_emoji` | string or null | Telegram sticker emoji when known. |
 | `emoji_list` | list of strings | Derived related emoji; otherwise empty. |
 | `message_id` | integer or null | Telegram message ID. |
@@ -932,6 +933,10 @@ When present, `from` contains integer `id`, boolean `is_bot`, string
 
 Fields whose value is null are retained in the serialized client object, except
 `req_id`, which is absent from listen messages.
+
+Protocol 1.20 advertises `sticker_file_unique_id`. Sticker file identity is
+preserved for request and listen messages, queued deliveries and replay. Older
+payloads may omit `file_unique_id`; SDKs decode it as nil.
 
 ### HTTP request and response contracts
 

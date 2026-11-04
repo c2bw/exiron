@@ -4,7 +4,7 @@
   "client_id": "runner",
   "listen": false,
   "server_version": "0.1.0",
-  "protocol_version": "1.19",
+  "protocol_version": "1.20",
   "capabilities": [
     "http_auth",
     "http_status",
@@ -15,6 +15,7 @@
     "websocket",
     "listen_mode",
     "sticker_emoji",
+    "sticker_file_unique_id",
     "telegram_bot_selection",
     "text_updates",
     "message_edits",

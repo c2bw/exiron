@@ -364,6 +364,7 @@ defmodule ExironWeb.ExironControllerTest do
       Hub.incoming_service_message(
         Message.new(222, 123, "file", "sticker bytes", "bot-token",
           sticker_id: "sticker-id",
+          file_unique_id: "sticker-unique-id",
           sticker_emoji: sticker_emoji
         )
       )
@@ -377,6 +378,7 @@ defmodule ExironWeb.ExironControllerTest do
     assert request["msgtype"] == "listen"
     assert request["datatype"] == "file"
     assert request["sticker_id"] == "sticker-id"
+    assert request["file_unique_id"] == "sticker-unique-id"
     assert request["sticker_emoji"] == sticker_emoji
     assert request["emoji_list"] == emoji_list
 
@@ -388,6 +390,7 @@ defmodule ExironWeb.ExironControllerTest do
 
     assert %{"events" => [event | _events]} = json_response(conn, 200)
     assert event["sticker_id"] == "sticker-id"
+    assert event["file_unique_id"] == "sticker-unique-id"
     assert event["sticker_emoji"] == sticker_emoji
     assert event["emoji_list"] == emoji_list
   end

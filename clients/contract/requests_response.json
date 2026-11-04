@@ -20,6 +20,7 @@
       "datatype": "text",
       "data": "L2FpIGhlbGxv",
       "sticker_id": "sticker-id",
+      "file_unique_id": "sticker-unique-id",
       "sticker_emoji": "\ud83e\udd23",
       "emoji_list": ["\ud83d\ude06", "\ud83e\udd23", "\ud83d\ude00", "\ud83d\ude02", "\ud83d\ude04", "\ud83d\ude03", "\ud83d\ude01"]
     }

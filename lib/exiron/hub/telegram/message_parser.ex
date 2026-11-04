@@ -85,7 +85,7 @@ defmodule Exiron.Hub.Telegram.MessageParser do
           %{sticker_id: file_id}
       end
 
-    {:ok, file_id, "file", opts}
+    {:ok, file_id, "file", Map.put(opts, :file_unique_id, Map.get(sticker, :file_unique_id))}
   end
 
   defp file_message(_message), do: :ignore

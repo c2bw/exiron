@@ -19,6 +19,7 @@ defmodule ExironClient.Wire.Message do
          instance: Map.get(params, "instance"),
          datatype: Map.get(params, "datatype"),
          sticker_id: Map.get(params, "sticker_id"),
+         file_unique_id: Map.get(params, "file_unique_id"),
          sticker_emoji: Map.get(params, "sticker_emoji"),
          emoji_list: Map.get(params, "emoji_list", []),
          data: data,
