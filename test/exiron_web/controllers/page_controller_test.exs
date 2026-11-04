@@ -115,6 +115,56 @@ defmodule ExironWeb.PageLiveTest do
     end)
   end
 
+  test "shows full file and photo captions on initial load and live updates", %{conn: conn} do
+    caption = "<b>Document & details</b>\n" <> String.duplicate("caption text ", 30)
+
+    :ok =
+      Hub.incoming_service_message(
+        Message.new(222, 123, "file", "file bytes", nil, caption: caption)
+      )
+
+    {:ok, view, _html} = live(log_in(conn), ~p"/")
+    [file_event | _] = Hub.status().events
+    file_selector = "#exiron-event-caption-#{file_event.id}"
+    assert has_element?(view, file_selector, "Document & details")
+
+    assert has_element?(
+             view,
+             "#{file_selector} .whitespace-pre-wrap",
+             String.duplicate("caption text ", 30) |> String.trim()
+           )
+
+    refute has_element?(view, "#{file_selector} b")
+
+    png = <<0x89, "PNG", 0x0D, 0x0A, 0x1A, 0x0A, "image bytes">>
+
+    :ok =
+      Hub.incoming_service_message(
+        Message.new(222, 123, "image", png, nil, caption: "Photo caption")
+      )
+
+    [photo_event | _] = Hub.status().events
+
+    assert_eventually(fn ->
+      assert has_element?(view, "#exiron-event-image-#{photo_event.id}")
+      assert has_element?(view, "#exiron-event-caption-#{photo_event.id}", "Photo caption")
+      assert has_element?(view, file_selector)
+    end)
+  end
+
+  test "omits caption blocks for files without captions", %{conn: conn} do
+    for caption <- [nil, ""] do
+      :ok =
+        Hub.incoming_service_message(
+          Message.new(222, 123, "file", "bytes", nil, caption: caption)
+        )
+    end
+
+    {:ok, view, _html} = live(log_in(conn), ~p"/")
+    assert has_element?(view, "#exiron-message-stream", "file payload, 5 bytes")
+    refute has_element?(view, "[id^=exiron-event-caption-]")
+  end
+
   test "shows image previews for image messages", %{conn: conn} do
     conn = log_in(conn)
     png = <<0x89, "PNG", 0x0D, 0x0A, 0x1A, 0x0A, "image bytes">>

@@ -61,6 +61,7 @@ defmodule Exiron.Hub.EventLog do
       bot_name: message.bot_name,
       datatype: message.datatype,
       preview: preview(message),
+      caption: message.caption,
       image_src:
         EventImage.source(
           message,

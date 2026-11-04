@@ -4,6 +4,8 @@
 
 ### Server and operations
 
+- Show media captions in the Overview traffic log, preserving line breaks and retaining full captions in activity events.
+
 - Preserve optional Telegram sticker `file_unique_id` through request/listen delivery, replay, activity events and both SDKs; retain sendable `sticker_id` behavior.
 
 - Capability discovery and protocol 1.20 support, with additive client controls.

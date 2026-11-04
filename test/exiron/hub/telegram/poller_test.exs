@@ -152,7 +152,8 @@ defmodule Exiron.Hub.Telegram.PollerTest do
     )
 
     assert_eventually(fn ->
-      assert [%{datatype: "image", preview: "image payload, 11 bytes"}] = Hub.status().events
+      assert [%{datatype: "image", preview: "image payload, 11 bytes", caption: "look at this"}] =
+               Hub.status().events
     end)
   end
 

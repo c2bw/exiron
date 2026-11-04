@@ -219,6 +219,7 @@ type Event struct {
 	BotName          *string   `json:"bot_name"`
 	Datatype         Datatype  `json:"datatype"`
 	Preview          string    `json:"preview"`
+	Caption          *string   `json:"caption"`
 	Hook             *string   `json:"hook"`
 	ImageSrc         *string   `json:"image_src"`
 	FileUniqueID     *string   `json:"file_unique_id"`

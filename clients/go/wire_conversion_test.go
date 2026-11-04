@@ -174,3 +174,14 @@ func TestEventConversionPreservesStickerFileIdentity(t *testing.T) {
 		t.Fatalf("sticker identity lost: %#v", event)
 	}
 }
+
+func TestEventConversionPreservesCaption(t *testing.T) {
+	caption := "Photo caption\nwith details"
+	event := (wireEvent{Caption: &caption}).toEvent()
+	if event.Caption == nil || *event.Caption != caption {
+		t.Fatalf("caption lost: %#v", event)
+	}
+	if event := (wireEvent{}).toEvent(); event.Caption != nil {
+		t.Fatalf("missing caption = %v", event.Caption)
+	}
+}

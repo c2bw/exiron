@@ -3,6 +3,21 @@ defmodule Exiron.Hub.EventLogTest do
 
   alias Exiron.Hub.{ActivityState, EventLog, EventMediaStore, Message, Settings}
 
+  test "media events retain full captions separately from the payload summary" do
+    caption = "<b>Photo & file</b>\n" <> String.duplicate("long caption ", 30)
+
+    for datatype <- ["image", "file"], direction <- ["incoming", "outgoing"] do
+      message = Message.new(222, 123, datatype, "bytes", nil, caption: caption)
+      state = EventLog.record(base_state(), direction, "telegram", nil, message, "received", "id")
+
+      assert [event] = state.activity.events
+      assert event.caption == caption
+      assert event.preview == "#{datatype} payload, 5 bytes"
+      assert [wire] = event |> List.wrap() |> Jason.encode!() |> Jason.decode!()
+      assert wire["caption"] == caption
+    end
+  end
+
   test "text preview is truncated" do
     message = Message.new(222, 123, "text", String.duplicate("a", 200))
 

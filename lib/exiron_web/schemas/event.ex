@@ -38,6 +38,7 @@ defmodule ExironWeb.Schemas.Event do
       bot_name: SchemaHelpers.nullable_string(),
       datatype: SchemaHelpers.datatype(),
       preview: %Schema{type: :string},
+      caption: SchemaHelpers.nullable_string(),
       image_src: SchemaHelpers.nullable_string(),
       sticker_id: SchemaHelpers.nullable_string(),
       file_unique_id: %Schema{

@@ -402,6 +402,19 @@ defmodule ExironWeb.PageLive.Components do
               />
             </div>
 
+            <div
+              :if={Map.get(event, :caption) not in [nil, ""]}
+              id={"exiron-event-caption-#{event.id}"}
+              class="ex-readout mt-3 px-3.5 py-3"
+            >
+              <p class="text-[10px] font-bold uppercase tracking-wider text-base-content/45">
+                Caption
+              </p>
+              <p class="mt-1.5 max-h-48 overflow-y-auto whitespace-pre-wrap text-sm leading-6 text-base-content/80 [overflow-wrap:anywhere]">
+                {event.caption}
+              </p>
+            </div>
+
             <p class="ex-readout mt-3 truncate px-3.5 py-3 font-mono text-xs text-base-content/70">
               {event.preview}
             </p>

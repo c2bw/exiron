@@ -150,6 +150,7 @@ func (w wireEvent) toEvent() Event {
 		BotName:          w.BotName,
 		Datatype:         Datatype(w.Datatype),
 		Preview:          w.Preview,
+		Caption:          w.Caption,
 		Hook:             w.Hook,
 		ImageSrc:         w.ImageSrc,
 		StickerID:        w.StickerID,

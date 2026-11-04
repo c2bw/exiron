@@ -13,6 +13,14 @@ uses two units). Captions default to plain text. `parse_mode` supports `plain`,
 `HTML`, `Markdown` and `MarkdownV2`; explicit `caption_entities`, including `[]`,
 take precedence over parse mode. Offsets and lengths use UTF-16 units.
 
+## Dashboard captions
+
+The Overview traffic log displays captions beneath media previews for incoming
+and outgoing messages, including photos and files. Captions retain line breaks
+and wrap long text; markup is displayed as text. Activity events expose an
+optional `caption` field alongside the payload summary. Older events without
+captions keep their existing display.
+
 ## Opt-in overflow
 
 Set `caption_overflow: true` to keep the first caption part on the media and send
